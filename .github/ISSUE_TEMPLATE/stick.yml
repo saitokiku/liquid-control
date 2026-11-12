@@ -1,0 +1,24 @@
+name: Get notified about the Stick
+description: Join the waitlist for the Liquid Control Stick, the USB receiver for computers that can't pair over Bluetooth.
+title: "Stick: notify me"
+labels: ["stick"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Issues are public. Don't include passwords, emails or anything personal.**
+        The Stick isn't sold yet. Submit this form and GitHub will notify you when this issue gets the news. Your GitHub name is public here, and we ask for no email.
+  - type: dropdown
+    id: computer
+    attributes:
+      label: What would you plug it into? (optional)
+      options:
+        - Windows PC
+        - Mac
+        - Linux computer
+        - Chromebook
+        - Something else
+  - type: textarea
+    id: wish
+    attributes:
+      label: Anything you'd like it to do? (optional)

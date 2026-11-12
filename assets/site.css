@@ -656,16 +656,82 @@ main { display: block; }
 .get-card .actions { margin-top: auto; padding-top: 22px; }
 .get-card .eyebrow { margin-bottom: 8px; }
 
+/* ---------- Pages: Get it, Support, Privacy, 404 ---------- */
+
+.page-head { max-width: 780px; padding-top: clamp(40px, 6vw, 80px); margin-bottom: clamp(32px, 4vw, 48px); }
+.page-head h1 { font-size: clamp(36px, 2.8vw + 24px, 58px); font-weight: 700; letter-spacing: -.028em; }
+.page-head > p:not(.eyebrow) { margin-top: 16px; color: var(--text-2); font-size: clamp(18px, .4vw + 16px, 21px); }
+
+.nav-links a[aria-current="page"] { background: var(--hover); }
+
+/* Get it: one card per platform. */
+.get-list { display: grid; gap: 16px; }
+.get-item { scroll-margin-top: 88px; }
+.get-item h2 { font-size: clamp(26px, 1.2vw + 20px, 34px); font-weight: 700; }
+.get-item h3 { margin-top: 26px; font-size: 18px; font-weight: 700; letter-spacing: -.01em; }
+.get-body > p:not(.fine):not(.sha) { margin-top: 12px; max-width: 46em; color: var(--text-2); }
+.get-body > p:first-child { margin-top: 14px; }
+.get-item .actions { margin-top: 24px; }
+.get-item .fine { margin-top: 12px; color: var(--text-2); font-size: 14px; }
+.steps { margin-top: 12px; padding-left: 1.4em; max-width: 46em; color: var(--text-2); }
+.steps li { padding-left: .2em; }
+.steps li + li { margin-top: 8px; }
+.steps li::marker { color: var(--text); font-weight: 600; }
+.sha { margin-top: 16px; color: var(--text-2); font-size: 15px; }
+.sha code { word-break: break-all; color: var(--text); }
+
+@media (min-width: 900px) {
+  .get-item { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); column-gap: 48px; }
+  .get-body > p:first-child { margin-top: 0; }
+}
+
+/* Support: the questions as cards, then Report a problem. */
+.faq { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); }
+.faq .card { scroll-margin-top: 88px; }
+.faq .card h3 { font-size: 19px; }
+.subhead { margin-bottom: 20px; font-size: clamp(26px, 1.2vw + 20px, 34px); font-weight: 700; }
+.report { margin-top: clamp(56px, 7vw, 96px); scroll-margin-top: 88px; }
+.report .card p { max-width: 46em; }
+.report .actions { margin-top: 24px; }
+
+/* Privacy: the policy as plain reading text. */
+.prose { max-width: 760px; }
+.prose h2 { margin-top: 52px; font-size: clamp(24px, .8vw + 20px, 30px); font-weight: 700; scroll-margin-top: 88px; }
+.prose p, .prose ul, .prose .table-wrap { margin-top: 14px; }
+.prose ul { padding-left: 1.3em; }
+.prose li + li, .prose li > ul { margin-top: 8px; }
+.prose code { overflow-wrap: anywhere; }
+.table-wrap { overflow-x: auto; }
+.prose table { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 1.45; }
+.prose th, .prose td { padding: 12px 12px 12px 0; border-top: .5px solid var(--edge); text-align: left; vertical-align: top; }
+.prose thead th { border-top: 0; color: var(--text-2); font-size: 13px; font-weight: 600; }
+.prose tbody th { font-weight: 600; }
+
+/* A narrow screen reads each row of a table as a short block, each cell under its column's name. */
+@media (max-width: 640px) {
+  .prose table, .prose tbody, .prose tr, .prose th, .prose td { display: block; }
+  .prose thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .prose tr { padding: 14px 0; border-top: .5px solid var(--edge); }
+  .prose tbody th, .prose td { padding: 4px 0 0; border: 0; }
+  .prose td::before { content: attr(data-label); display: block; color: var(--text-2); font-size: 13px; font-weight: 600; }
+}
+
+/* 404 */
+.notfound { display: grid; justify-items: start; align-content: center; min-height: 56vh; padding-top: 48px; }
+.notfound h1 { font-size: clamp(36px, 2.8vw + 24px, 58px); font-weight: 700; }
+.notfound > p:not(.eyebrow) { margin-top: 16px; color: var(--text-2); font-size: 20px; }
+.notfound .actions { margin-top: 32px; }
+
 /* ---------- Footer ---------- */
 
 .site-footer {
   margin-top: clamp(80px, 10vw, 140px);
-  padding-top: 28px;
   padding-bottom: calc(40px + env(safe-area-inset-bottom));
-  border-top: .5px solid var(--edge);
   color: var(--text-2);
   font-size: 15px;
 }
+/* The rule sits inside the gutters, lined up with the cards above it. */
+.site-footer::before { content: ""; display: block; margin-bottom: 28px; border-top: .5px solid var(--edge); }
 .footer-links { display: flex; flex-wrap: wrap; gap: 0 4px; list-style: none; padding: 0; margin-left: -12px; }
 .footer-links a {
   display: inline-flex;

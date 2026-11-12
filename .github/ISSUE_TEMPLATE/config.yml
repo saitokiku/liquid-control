@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Frequently asked questions
+    url: https://saitokiku.github.io/liquid-control/support/#faq
+    about: Pairing, devices, and what stays private.

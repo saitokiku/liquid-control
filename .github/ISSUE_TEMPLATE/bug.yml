@@ -1,0 +1,46 @@
+name: Report a problem
+description: Something in Liquid Control doesn't work the way it should.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Issues are public. Don't include passwords, emails or anything personal.**
+        Common questions are answered in the [FAQ](https://saitokiku.github.io/liquid-control/support/#faq).
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: dropdown
+    id: remote
+    attributes:
+      label: Your phone or watch
+      options:
+        - iPhone
+        - Apple Watch
+        - Android phone
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: The device you were controlling
+      description: The kind of device and its system, like "Windows 11 laptop", "Mac with macOS 15" or "Google TV". No names or serial numbers.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      description: On iPhone, TestFlight shows it under Liquid Control. On Android, it's in Settings → Apps → Liquid Control.
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to make it happen again
+      placeholder: |
+        1.
+        2.
+        3.

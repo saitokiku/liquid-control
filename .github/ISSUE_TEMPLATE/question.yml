@@ -1,0 +1,24 @@
+name: Ask a question
+description: How to do something with Liquid Control, or whether it can.
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Issues are public. Don't include passwords, emails or anything personal.**
+        The [FAQ](https://saitokiku.github.io/liquid-control/support/#faq) may already have the answer.
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+    validations:
+      required: true
+  - type: dropdown
+    id: remote
+    attributes:
+      label: Your phone or watch
+      options:
+        - iPhone
+        - Apple Watch
+        - Android phone
+        - Not using it yet
