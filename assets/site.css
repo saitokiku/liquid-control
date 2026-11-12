@@ -1,0 +1,680 @@
+/* Liquid Control: the website's look.
+   The app's spectral glass: flat system backgrounds, translucent glass with a hairline, and one sun on the right edge,
+   two thirds up, whose light catches each glass rim from its own angle: white in the middle, a faint warm side and a
+   faint cool side, and the light that passes through landing on the far edge with the same thin split.
+   No web fonts, no images from anywhere else. assets/site.js aims each rim at the sun; without it they keep the angle
+   set here. */
+
+/* ---------- Tokens ---------- */
+
+:root {
+  color-scheme: light;
+  --bg: #F2F2F7;
+  --surface: #E5E5EA;
+  --text: #000000;
+  --text-2: #6E6E73;
+  --link: #0058C7;
+  --hover: rgba(0, 0, 0, .05);
+  --glass: rgba(255, 255, 255, .62);
+  --glass-solid: #FFFFFF;
+  --hair: rgba(0, 0, 0, .07);
+  --edge: rgba(60, 60, 67, .29);
+  --shadow: 0 1px 2px rgba(0, 0, 0, .06), 0 6px 16px rgba(0, 0, 0, .07);
+  --blend: normal;
+  /* The light on the rims: the app's Natural strength (0.6) at about 0.85 of the sun's reach, softer in light mode
+     (white glass on a light page shows colour as dirt). From the warm #FFA774 and #FFDC99 and the cool #A4E0FF and
+     #A1AEFF below. */
+  --hi: rgba(255, 255, 255, .72);
+  --hi-2: rgba(255, 255, 255, .32);
+  --fr-w1: rgba(255, 167, 116, .21);
+  --fr-w2: rgba(255, 220, 153, .17);
+  --fr-c1: rgba(164, 224, 255, .17);
+  --fr-c2: rgba(161, 174, 255, .21);
+  --ca-w1: rgba(255, 167, 116, .19);
+  --ca-w2: rgba(255, 220, 153, .15);
+  --ca-hi: rgba(255, 255, 255, .22);
+  --ca-c1: rgba(164, 224, 255, .15);
+  --ca-c2: rgba(161, 174, 255, .19);
+
+  /* The same in both themes. */
+  --warm-1: #FFA774;
+  --warm-2: #FFDC99;
+  --cool-1: #A4E0FF;
+  --cool-2: #A1AEFF;
+  --mac: #4F8BFF;
+  --pc: #3DDC97;
+  --tv: #9E7AFF;
+  --stick: #FFC24D;
+  --edge-strong: #8E8E93;
+  --radius-card: 28px;
+  --radius-surface: 32px;
+  --gutter: 16px;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #000000;
+    --surface: #1C1C1E;
+    --text: #FFFFFF;
+    --text-2: #98989F;
+    --link: #6EA8FF;
+    --hover: rgba(255, 255, 255, .08);
+    --glass: rgba(255, 255, 255, .085);
+    --glass-solid: #2C2C2E;
+    --hair: rgba(255, 255, 255, .09);
+    --edge: rgba(235, 235, 245, .3);
+    --shadow: 0 6px 18px rgba(0, 0, 0, .6);
+    --blend: plus-lighter;
+    --hi: rgba(255, 255, 255, .77);
+    --hi-2: rgba(255, 255, 255, .43);
+    --fr-w1: rgba(255, 167, 116, .28);
+    --fr-w2: rgba(255, 220, 153, .23);
+    --fr-c1: rgba(164, 224, 255, .23);
+    --fr-c2: rgba(161, 174, 255, .28);
+    --ca-w1: rgba(255, 167, 116, .26);
+    --ca-w2: rgba(255, 220, 153, .2);
+    --ca-hi: rgba(255, 255, 255, .3);
+    --ca-c1: rgba(164, 224, 255, .2);
+    --ca-c2: rgba(161, 174, 255, .26);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #000000;
+  --surface: #1C1C1E;
+  --text: #FFFFFF;
+  --text-2: #98989F;
+  --link: #6EA8FF;
+  --hover: rgba(255, 255, 255, .08);
+  --glass: rgba(255, 255, 255, .085);
+  --glass-solid: #2C2C2E;
+  --hair: rgba(255, 255, 255, .09);
+  --edge: rgba(235, 235, 245, .3);
+  --shadow: 0 6px 18px rgba(0, 0, 0, .6);
+  --blend: plus-lighter;
+  --hi: rgba(255, 255, 255, .77);
+  --hi-2: rgba(255, 255, 255, .43);
+  --fr-w1: rgba(255, 167, 116, .28);
+  --fr-w2: rgba(255, 220, 153, .23);
+  --fr-c1: rgba(164, 224, 255, .23);
+  --fr-c2: rgba(161, 174, 255, .28);
+  --ca-w1: rgba(255, 167, 116, .26);
+  --ca-w2: rgba(255, 220, 153, .2);
+  --ca-hi: rgba(255, 255, 255, .3);
+  --ca-c1: rgba(164, 224, 255, .2);
+  --ca-c2: rgba(161, 174, 255, .26);
+}
+
+/* ---------- Base ---------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 17px/1.5 var(--font);
+  -webkit-font-smoothing: antialiased;
+  overflow-wrap: break-word;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+
+a { color: var(--link); text-underline-offset: .18em; }
+
+:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
+
+h1, h2, h3 { margin: 0; line-height: 1.1; letter-spacing: -.022em; text-wrap: balance; }
+p, ul, ol { margin: 0; }
+
+code { font-family: var(--mono); font-size: .9em; }
+
+.wrap {
+  width: 100%;
+  max-width: 1152px;
+  margin-inline: auto;
+  padding-left: max(var(--gutter), env(safe-area-inset-left));
+  padding-right: max(var(--gutter), env(safe-area-inset-right));
+}
+
+.skip {
+  position: absolute;
+  left: 12px;
+  top: -100px;
+  z-index: 20;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: var(--text);
+  color: var(--bg);
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip:focus { top: 12px; }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- Glass ---------- */
+
+/* Fill, blur, hairline and shadow; then the light: ::before is the highlight facing the sun (white, with the warm and
+   cool split on its shoulders), ::after the caustic on the far edge. Both are thin rings, masked to the rim. */
+.glass {
+  --sun-angle: 60deg;
+  position: relative;
+  isolation: isolate;
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(18px) saturate(1.7);
+  backdrop-filter: blur(18px) saturate(1.7);
+  box-shadow: inset 0 0 0 .5px var(--hair), var(--shadow);
+}
+
+.glass::before,
+.glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  mix-blend-mode: var(--blend);
+}
+
+.glass::before {
+  padding: 1.2px;
+  background:
+    conic-gradient(from calc(var(--sun-angle) - 180deg),
+      transparent 156deg, var(--fr-w1) 164deg, var(--fr-w2) 170deg, transparent 175deg,
+      transparent 185deg, var(--fr-c1) 190deg, var(--fr-c2) 196deg, transparent 204deg),
+    conic-gradient(from calc(var(--sun-angle) - 180deg),
+      transparent 146deg, var(--hi-2) 170deg, var(--hi) 180deg, var(--hi-2) 190deg, transparent 214deg);
+}
+
+.glass::after {
+  padding: 1.8px;
+  filter: blur(.4px);
+  background:
+    conic-gradient(from var(--sun-angle),
+      transparent 150deg, var(--ca-w1) 160deg, var(--ca-w2) 168deg, var(--ca-hi) 176deg,
+      var(--ca-hi) 184deg, var(--ca-c1) 192deg, var(--ca-c2) 200deg, transparent 210deg);
+}
+
+/* Solid glass: chosen on the page (data-glass="solid"), or asked for by Reduce Transparency or Increase Contrast.
+   Opaque, with an edge, never invisible; no light on the rim. */
+:root[data-glass="solid"] .glass {
+  background: var(--glass-solid);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: inset 0 0 0 1px var(--edge), var(--shadow);
+}
+:root[data-glass="solid"] .glass::before,
+:root[data-glass="solid"] .glass::after { content: none; }
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background: var(--glass-solid);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: inset 0 0 0 1px var(--edge), var(--shadow);
+  }
+  .glass::before,
+  .glass::after { content: none; }
+}
+
+@media (prefers-contrast: more) {
+  .glass {
+    background: var(--glass-solid);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: inset 0 0 0 1px var(--edge-strong), var(--shadow);
+  }
+  .glass::before,
+  .glass::after { content: none; }
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 999px;
+  color: var(--text);
+  font: 600 17px/1.2 var(--font);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.btn.glass:hover { background-image: linear-gradient(var(--hover), var(--hover)); }
+
+/* The one primary action: the label colour as a solid fill, with the background's colour for its words (as the app). */
+.btn-primary { background: var(--text); color: var(--bg); }
+.btn-primary:hover { background: var(--text); opacity: .86; }
+
+.btn-small { min-height: 44px; padding: 0 18px; font-size: 15px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .btn { transition: transform .15s ease, opacity .15s ease; }
+  .btn:active { transform: scale(.97); }
+}
+
+.actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+@media (max-width: 479px) {
+  .hero .actions .btn { flex: 1 1 100%; }
+}
+
+/* ---------- Header ---------- */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding-top: 10px;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 60px;
+  padding: 6px 6px 6px 10px;
+  border-radius: 999px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 10px 0 6px;
+  margin-right: auto;
+  border-radius: 999px;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: -.01em;
+  text-decoration: none;
+}
+.brand img { width: 30px; height: 30px; border-radius: 7px; }
+
+.nav-links { display: none; list-style: none; padding: 0; gap: 2px; }
+.nav-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.nav-links a:hover { background: var(--hover); }
+
+@media (min-width: 820px) {
+  .nav-links { display: flex; }
+  .nav .btn { margin-left: 8px; }
+}
+
+/* ---------- Sections ---------- */
+
+main { display: block; }
+
+.section {
+  padding-top: clamp(72px, 9vw, 128px);
+  scroll-margin-top: 72px;
+}
+
+.section-head { max-width: 760px; margin-bottom: clamp(28px, 4vw, 48px); }
+.section-head h2 { font-size: clamp(32px, 2.6vw + 22px, 52px); font-weight: 700; }
+.section-head p { margin-top: 16px; color: var(--text-2); font-size: clamp(17px, .35vw + 16px, 21px); }
+
+.eyebrow {
+  margin-bottom: 12px;
+  color: var(--text-2);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .01em;
+}
+
+.note { margin-top: 20px; color: var(--text-2); font-size: 15px; }
+
+/* ---------- Hero ---------- */
+
+.hero {
+  display: grid;
+  gap: 48px;
+  padding-top: clamp(40px, 7vw, 88px);
+  align-items: center;
+}
+
+.hero h1 { font-size: clamp(38px, 3vw + 24px, 62px); font-weight: 700; letter-spacing: -.028em; }
+.hero .lede { margin-top: 20px; max-width: 34em; color: var(--text-2); font-size: clamp(18px, .5vw + 16px, 22px); }
+.hero .actions { margin-top: 32px; }
+.hero .fine { margin-top: 20px; max-width: 38em; color: var(--text-2); font-size: 15px; }
+
+.hero-art { display: flex; justify-content: center; padding: 16px 0 24px; }
+
+@media (min-width: 960px) {
+  .hero { grid-template-columns: minmax(0, 1fr) auto; gap: 56px; }
+  .hero-art { padding: 0 24px 0 0; }
+}
+
+/* ---------- The remote (the hero rendering) ----------
+   Drawn from the app's layout (Phone/Remote: RemoteRoot, DeviceBar, Dock, RemoteStyle) on a 402 × 874 pt screen:
+   16 pt margins; the device bar, 48; the surface; the keys row, 48; the big row, 88, its sides round((w − 16) × 0.29).
+   One unit (--u) is one point, so the whole phone scales with its width. */
+
+.remote {
+  --w: min(340px, 100vw - 2 * var(--gutter) - 32px);
+  --u: calc(var(--w) / 402);
+  position: relative;
+  flex: none;
+  width: var(--w);
+  aspect-ratio: 402 / 874;
+  display: flex;
+  flex-direction: column;
+  padding: 0 calc(16 * var(--u)) calc(20 * var(--u));
+  border-radius: calc(62 * var(--u));
+  background: var(--bg);
+  color: var(--text);
+  box-shadow:
+    0 0 0 calc(10 * var(--u)) #1B1C20,
+    0 0 0 calc(11.5 * var(--u)) #3A3B40,
+    0 calc(36 * var(--u)) calc(80 * var(--u)) rgba(0, 0, 0, .28);
+  overflow: hidden;
+  font-size: calc(17 * var(--u));
+  font-weight: 600;
+  line-height: 1.2;
+  user-select: none;
+}
+
+.remote .ic {
+  width: calc(22 * var(--u));
+  height: calc(22 * var(--u));
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.remote-status {
+  position: relative;
+  flex: none;
+  height: calc(62 * var(--u));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 calc(18 * var(--u)) calc(6 * var(--u)) calc(24 * var(--u));
+}
+.remote-island {
+  position: absolute;
+  left: 50%;
+  top: calc(11 * var(--u));
+  width: calc(126 * var(--u));
+  height: calc(37 * var(--u));
+  border-radius: 999px;
+  background: #000;
+  transform: translateX(-50%);
+}
+.remote-status .battery { width: calc(27 * var(--u)); height: calc(13 * var(--u)); }
+
+.remote-bar,
+.remote-keys,
+.remote-big { flex: none; display: grid; gap: calc(8 * var(--u)); }
+.remote-bar { height: calc(48 * var(--u)); grid-template-columns: minmax(0, 1fr) repeat(3, calc(48 * var(--u))); }
+.remote-keys { height: calc(48 * var(--u)); grid-template-columns: minmax(0, 1fr) repeat(4, calc(48 * var(--u))); }
+.remote-big { height: calc(88 * var(--u)); margin-top: calc(8 * var(--u)); grid-template-columns: 29fr 42fr 29fr; }
+
+.remote .key {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(8 * var(--u));
+  min-width: 0;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.remote .key.start { justify-content: flex-start; padding-left: calc(18 * var(--u)); }
+.remote .key.name { justify-content: flex-start; gap: calc(10 * var(--u)); padding: 0 calc(18 * var(--u)); }
+.remote .key.mic { background: var(--mac); color: #000; }
+.remote .key.mic .ic { width: calc(30 * var(--u)); height: calc(30 * var(--u)); }
+
+/* Rims are lit from below on the bar and from above on the dock: the sun sits between them. */
+.remote-bar .glass { --sun-angle: 115deg; }
+.remote-keys .glass, .remote-big .glass { --sun-angle: 55deg; }
+
+.remote-surface {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  margin: calc(16 * var(--u)) 0;
+  padding: 0 calc(16 * var(--u)) calc(24 * var(--u));
+  border-radius: calc(32 * var(--u));
+  background: var(--surface);
+  color: var(--text);
+  font-size: calc(13 * var(--u));
+  font-weight: 400;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.remote-home {
+  position: absolute;
+  left: 50%;
+  bottom: calc(8 * var(--u));
+  width: calc(140 * var(--u));
+  height: calc(5 * var(--u));
+  border-radius: 999px;
+  background: var(--text);
+  opacity: .85;
+  transform: translateX(-50%);
+}
+
+.c-mac { color: var(--mac); }
+.c-pc { color: var(--pc); }
+.c-tv { color: var(--tv); }
+.c-stick { color: var(--stick); }
+
+/* ---------- Cards and grids ---------- */
+
+.card {
+  border-radius: var(--radius-card);
+  padding: clamp(22px, 2.4vw, 30px);
+}
+.card h3 { font-size: 21px; font-weight: 700; letter-spacing: -.015em; }
+.card p { margin-top: 8px; color: var(--text-2); font-size: 16px; }
+
+.grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+}
+
+.icon-tile {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 18px;
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--text);
+}
+.icon-tile svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tag {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Works with: one chip per kind of device, a dot in its colour. */
+/* At most three columns, so the nine kinds of device make even rows. */
+.grid-devices {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, max(220px, (100% - 24px) / 3)), 1fr));
+  list-style: none;
+  padding: 0;
+}
+.device {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr);
+  column-gap: 14px;
+  align-items: baseline;
+  padding: 18px 20px;
+  border-radius: 22px;
+}
+.device .dot { width: 12px; height: 12px; border-radius: 50%; background: currentColor; transform: translateY(1px); }
+.device strong { font-size: 17px; font-weight: 650; }
+.device span:last-child { grid-column: 2; color: var(--text-2); font-size: 15px; }
+
+/* The Stick */
+.stick {
+  display: grid;
+  gap: 28px;
+  align-items: center;
+  border-radius: var(--radius-surface);
+  padding: clamp(24px, 4vw, 48px);
+}
+/* The Stick, drawn: a USB-A plug and a glass body with its pairing button and its light. */
+.stick-art { display: grid; place-items: center; padding: 12px 0; }
+.stick-device { display: flex; align-items: center; width: min(100%, 360px); aspect-ratio: 3 / 1; }
+.stick-plug {
+  position: relative;
+  flex: none;
+  width: 21%;
+  height: 46%;
+  border-radius: 7px 0 0 7px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--edge);
+}
+.stick-plug::after {
+  content: "";
+  position: absolute;
+  left: 18%;
+  right: 0;
+  top: 30%;
+  bottom: 30%;
+  border-radius: 3px 0 0 3px;
+  background: var(--text-2);
+  opacity: .5;
+}
+.stick-body {
+  position: relative;
+  flex: 1;
+  height: 100%;
+  border-radius: 34px;
+}
+.stick-button {
+  position: absolute;
+  left: 46%;
+  top: 50%;
+  width: 18%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px var(--edge), inset 0 0 0 7px var(--hover);
+  transform: translate(-50%, -50%);
+}
+.stick-light {
+  position: absolute;
+  right: 13%;
+  top: 50%;
+  width: 4.5%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--stick);
+  box-shadow: 0 0 14px 2px var(--stick);
+  transform: translateY(-50%);
+}
+.stick h2 { font-size: clamp(30px, 2.4vw + 20px, 46px); font-weight: 700; }
+.stick p { margin-top: 14px; color: var(--text-2); font-size: 18px; }
+.stick ul { margin-top: 18px; padding-left: 1.2em; color: var(--text-2); }
+.stick li + li { margin-top: 6px; }
+.stick .actions { margin-top: 28px; }
+.stick .fine { margin-top: 14px; color: var(--text-2); font-size: 14px; }
+
+@media (min-width: 860px) {
+  .stick { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 48px; }
+}
+
+/* Get it: the two phones first and larger, then the rest. */
+.grid-get { display: grid; gap: 16px; }
+@media (min-width: 600px) {
+  .grid-get { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-get > :last-child { grid-column: 1 / -1; }
+}
+@media (min-width: 940px) {
+  .grid-get { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .grid-get > * { grid-column: span 2; }
+  .grid-get > :nth-child(-n + 2) { grid-column: span 3; }
+  .grid-get > :last-child { grid-column: span 2; }
+}
+.get-card { display: flex; flex-direction: column; }
+.get-card .actions { margin-top: auto; padding-top: 22px; }
+.get-card .eyebrow { margin-bottom: 8px; }
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+  margin-top: clamp(80px, 10vw, 140px);
+  padding-top: 28px;
+  padding-bottom: calc(40px + env(safe-area-inset-bottom));
+  border-top: .5px solid var(--edge);
+  color: var(--text-2);
+  font-size: 15px;
+}
+.footer-links { display: flex; flex-wrap: wrap; gap: 0 4px; list-style: none; padding: 0; margin-left: -12px; }
+.footer-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 999px;
+  color: var(--text);
+  text-decoration: none;
+}
+.footer-links a:hover { background: var(--hover); }
+.site-footer p { margin-top: 12px; }
