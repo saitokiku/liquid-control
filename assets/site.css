@@ -639,6 +639,9 @@ main { display: block; }
 .stick li + li { margin-top: 6px; }
 .stick .actions { margin-top: 28px; }
 .stick .fine { margin-top: 14px; color: var(--text-2); font-size: 14px; }
+/* The FCC's notice for a device shown before its authorization (47 CFR 2.803): conspicuous, in the text colour. */
+/* p.fcc, after .card p and .stick p, so it wins in both the home page's Stick and Get it's card. */
+p.fcc { margin-top: 16px; max-width: 46em; padding: 10px 14px; border-left: 3px solid var(--text-2); color: var(--text); font-size: 14px; }
 
 @media (min-width: 860px) {
   .stick { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 48px; }
@@ -673,7 +676,7 @@ main { display: block; }
 .get-item { scroll-margin-top: 88px; }
 .get-item h2 { font-size: clamp(26px, 1.2vw + 20px, 34px); font-weight: 700; }
 .get-item h3 { margin-top: 26px; font-size: 18px; font-weight: 700; letter-spacing: -.01em; }
-.get-body > p:not(.fine):not(.sha) { margin-top: 12px; max-width: 46em; color: var(--text-2); }
+.get-body > p:not(.fine):not(.sha):not(.fcc) { margin-top: 12px; max-width: 46em; color: var(--text-2); }
 .get-body > p:first-child { margin-top: 14px; }
 .get-item .actions { margin-top: 24px; }
 .get-item .fine { margin-top: 12px; color: var(--text-2); font-size: 14px; }
