@@ -12,10 +12,11 @@
   --bg: #F2F2F7;
   --surface: #E5E5EA;
   --text: #000000;
-  --text-2: #6E6E73;
+  --text-2: #636366;
   --link: #0058C7;
   --hover: rgba(0, 0, 0, .05);
   --glass: rgba(255, 255, 255, .62);
+  --glass-bar: rgba(255, 255, 255, .62);   /* the sticky header, which content scrolls under */
   --glass-solid: #FFFFFF;
   --hair: rgba(0, 0, 0, .07);
   --edge: rgba(60, 60, 67, .29);
@@ -63,6 +64,7 @@
     --link: #6EA8FF;
     --hover: rgba(255, 255, 255, .08);
     --glass: rgba(255, 255, 255, .085);
+    --glass-bar: rgba(28, 28, 30, .72);
     --glass-solid: #2C2C2E;
     --hair: rgba(255, 255, 255, .09);
     --edge: rgba(235, 235, 245, .3);
@@ -91,6 +93,7 @@
   --link: #6EA8FF;
   --hover: rgba(255, 255, 255, .08);
   --glass: rgba(255, 255, 255, .085);
+  --glass-bar: rgba(28, 28, 30, .72);
   --glass-solid: #2C2C2E;
   --hair: rgba(255, 255, 255, .09);
   --edge: rgba(235, 235, 245, .3);
@@ -298,6 +301,7 @@ code { font-family: var(--mono); font-size: .9em; }
 }
 
 .nav {
+  --glass: var(--glass-bar);
   display: flex;
   align-items: center;
   gap: 4px;
