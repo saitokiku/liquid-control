@@ -2,8 +2,9 @@
 
 The website of Liquid Control, at https://saitokiku.github.io/liquid-control/.
 
-Liquid Control turns your iPhone, Apple Watch or Android phone into the trackpad, keyboard and remote for your Mac, PC,
-iPad and TV. This repository holds the site and, in its Releases, the downloads. The apps' source code is private.
+Liquid Control turns your iPhone or Apple Watch into the trackpad, keyboard and remote for your Mac, PC, iPad and TV;
+Android is coming soon. This repository holds the site and, in its Releases, the downloads. The apps' source code is
+private.
 
 - Get it: https://saitokiku.github.io/liquid-control/get/
 - Support and questions: https://github.com/saitokiku/liquid-control/issues/new/choose (issues are public)

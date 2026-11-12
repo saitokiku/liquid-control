@@ -21,7 +21,6 @@ body:
       options:
         - iPhone
         - Apple Watch
-        - Android phone
     validations:
       required: true
   - type: input
@@ -35,7 +34,7 @@ body:
     id: version
     attributes:
       label: App version
-      description: On iPhone, TestFlight shows it under Liquid Control. On Android, it's in Settings → Apps → Liquid Control.
+      description: TestFlight shows it under Liquid Control.
   - type: textarea
     id: steps
     attributes:
