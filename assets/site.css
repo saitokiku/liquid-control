@@ -469,27 +469,12 @@ main { display: block; }
   font-weight: 600;
 }
 
-/* Works with: one chip per kind of device, a dot in its colour. */
-/* At most three columns, so the nine kinds of device make even rows. */
-.grid-devices {
-  display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, max(220px, (100% - 24px) / 3)), 1fr));
-  list-style: none;
-  padding: 0;
-}
-.device {
-  display: grid;
-  grid-template-columns: 12px minmax(0, 1fr);
-  column-gap: 14px;
-  align-items: baseline;
-  padding: 18px 20px;
-  border-radius: 22px;
-}
-.device .dot { width: 12px; height: 12px; border-radius: 50%; background: currentColor; transform: translateY(1px); }
-.device strong { font-size: 17px; font-weight: 650; }
-.device span:last-child { grid-column: 2; color: var(--text-2); font-size: 15px; }
-
+/* Works with: one card per kind of device, its icon in the kind's colour, the brands under the name. */
+.card .brands { margin-top: 4px; color: var(--text); font-weight: 600; }
+.icon-tile.c-mac { color: var(--mac); }
+.icon-tile.c-pc { color: var(--pc); }
+.icon-tile.c-tv { color: var(--tv); }
+.icon-tile.c-stick { color: var(--stick); }
 /* The Stick */
 .stick {
   display: grid;
