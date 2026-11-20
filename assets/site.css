@@ -55,7 +55,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
+  :root {
     color-scheme: dark;
     --bg: #000000;
     --surface: #1C1C1E;
@@ -82,34 +82,6 @@
     --ca-c1: rgba(164, 224, 255, .2);
     --ca-c2: rgba(161, 174, 255, .26);
   }
-}
-
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --bg: #000000;
-  --surface: #1C1C1E;
-  --text: #FFFFFF;
-  --text-2: #98989F;
-  --link: #6EA8FF;
-  --hover: rgba(255, 255, 255, .08);
-  --glass: rgba(255, 255, 255, .085);
-  --glass-bar: rgba(28, 28, 30, .72);
-  --glass-solid: #2C2C2E;
-  --hair: rgba(255, 255, 255, .09);
-  --edge: rgba(235, 235, 245, .3);
-  --shadow: 0 6px 18px rgba(0, 0, 0, .6);
-  --blend: plus-lighter;
-  --hi: rgba(255, 255, 255, .77);
-  --hi-2: rgba(255, 255, 255, .43);
-  --fr-w1: rgba(255, 167, 116, .28);
-  --fr-w2: rgba(255, 220, 153, .23);
-  --fr-c1: rgba(164, 224, 255, .23);
-  --fr-c2: rgba(161, 174, 255, .28);
-  --ca-w1: rgba(255, 167, 116, .26);
-  --ca-w2: rgba(255, 220, 153, .2);
-  --ca-hi: rgba(255, 255, 255, .3);
-  --ca-c1: rgba(164, 224, 255, .2);
-  --ca-c2: rgba(161, 174, 255, .26);
 }
 
 /* ---------- Base ---------- */
@@ -222,17 +194,8 @@ code { font-family: var(--mono); font-size: .9em; }
       var(--ca-hi) 184deg, var(--ca-c1) 192deg, var(--ca-c2) 200deg, transparent 210deg);
 }
 
-/* Solid glass: chosen on the page (data-glass="solid"), or asked for by Reduce Transparency or Increase Contrast.
-   Opaque, with an edge, never invisible; no light on the rim. */
-:root[data-glass="solid"] .glass {
-  background: var(--glass-solid);
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-  box-shadow: inset 0 0 0 1px var(--edge), var(--shadow);
-}
-:root[data-glass="solid"] .glass::before,
-:root[data-glass="solid"] .glass::after { content: none; }
-
+/* Solid glass, when Reduce Transparency or Increase Contrast asks for it: opaque, with an edge, never invisible;
+   no light on the rim. */
 @media (prefers-reduced-transparency: reduce) {
   .glass {
     background: var(--glass-solid);
@@ -288,7 +251,7 @@ code { font-family: var(--mono); font-size: .9em; }
 .actions { display: flex; flex-wrap: wrap; gap: 12px; }
 
 @media (max-width: 479px) {
-  .hero .actions .btn { flex: 1 1 100%; }
+  .hero .actions .btn, .section > .actions .btn { flex: 1 1 100%; }
 }
 
 /* ---------- Header ---------- */
@@ -355,7 +318,7 @@ main { display: block; }
 }
 
 .section-head { max-width: 760px; margin-bottom: clamp(28px, 4vw, 48px); }
-.section-head h2 { font-size: clamp(32px, 2.6vw + 22px, 52px); font-weight: 700; }
+.section-head h2 { font-size: clamp(28px, 1.6vw + 22px, 40px); font-weight: 700; }
 .section-head p { margin-top: 16px; color: var(--text-2); font-size: clamp(17px, .35vw + 16px, 21px); }
 
 .eyebrow {
@@ -366,7 +329,7 @@ main { display: block; }
   letter-spacing: .01em;
 }
 
-.note { margin-top: 20px; color: var(--text-2); font-size: 15px; }
+.note { margin-top: 20px; font-size: 15px; }
 
 /* ---------- Hero ---------- */
 
@@ -418,11 +381,6 @@ main { display: block; }
   .hero-art { padding: 0 24px 0 0; }
 }
 
-.c-mac { color: var(--mac); }
-.c-pc { color: var(--pc); }
-.c-tv { color: var(--tv); }
-.c-stick { color: var(--stick); }
-
 /* ---------- Cards and grids ---------- */
 
 .card {
@@ -432,10 +390,9 @@ main { display: block; }
 .card h3 { font-size: 21px; font-weight: 700; letter-spacing: -.015em; }
 .card p { margin-top: 8px; color: var(--text-2); font-size: 16px; }
 
-.grid {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+.grid { display: grid; gap: 16px; }
+@media (min-width: 720px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 .icon-tile {
@@ -469,8 +426,22 @@ main { display: block; }
   font-weight: 600;
 }
 
-/* Works with: one card per kind of device, its icon in the kind's colour, the brands under the name. */
-.card .brands { margin-top: 4px; color: var(--text); font-weight: 600; }
+/* Works with: the five kinds of device as plain columns (rows on a narrow screen), each icon in its kind's colour
+   and the brands under the name. No glass: it's a list. */
+.kinds { display: grid; gap: 28px 32px; }
+.kinds article { display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: 16px; }
+.kinds .icon-tile { margin-bottom: 0; }
+.kinds h3 { font-size: 19px; font-weight: 700; letter-spacing: -.015em; line-height: 1.2; }
+.kinds p { margin-top: 6px; color: var(--text-2); font-size: 15px; }
+.kinds .brands { margin-top: 4px; color: var(--text); font-weight: 600; }
+@media (min-width: 640px) {
+  .kinds { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1000px) {
+  .kinds { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px; }
+  .kinds article { display: block; }
+  .kinds .icon-tile { margin-bottom: 16px; }
+}
 .icon-tile.c-mac { color: var(--mac); }
 .icon-tile.c-pc { color: var(--pc); }
 .icon-tile.c-tv { color: var(--tv); }
@@ -695,7 +666,7 @@ main { display: block; }
   .stick-renders img:nth-child(3) { opacity: 1; }
 }
 .stick-art figcaption { margin-top: 4px; color: var(--text-2); font-size: 13px; text-align: center; }
-.stick h2 { font-size: clamp(30px, 2.4vw + 20px, 46px); font-weight: 700; }
+.stick h2 { font-size: clamp(28px, 1.6vw + 22px, 40px); font-weight: 700; }
 .stick p { margin-top: 14px; color: var(--text-2); font-size: 18px; }
 .stick ul { margin-top: 18px; padding-left: 1.2em; color: var(--text-2); }
 .stick li + li { margin-top: 6px; }
@@ -709,22 +680,6 @@ p.fcc { margin-top: 16px; max-width: 46em; padding: 10px 14px; border-left: 3px 
   .stick { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 48px; }
 }
 
-/* Get it: the two phones first and larger, then the rest. */
-.grid-get { display: grid; gap: 16px; }
-@media (min-width: 600px) {
-  .grid-get { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .grid-get > :last-child { grid-column: 1 / -1; }
-}
-@media (min-width: 940px) {
-  .grid-get { grid-template-columns: repeat(6, minmax(0, 1fr)); }
-  .grid-get > * { grid-column: span 2; }
-  .grid-get > :nth-child(-n + 2) { grid-column: span 3; }
-  .grid-get > :last-child { grid-column: span 2; }
-}
-.get-card { display: flex; flex-direction: column; }
-.get-card .actions { margin-top: auto; padding-top: 22px; }
-.get-card .eyebrow { margin-bottom: 8px; }
-
 /* ---------- Pages: Get it, Support, Privacy, 404 ---------- */
 
 .page-head { max-width: 780px; padding-top: clamp(40px, 6vw, 80px); margin-bottom: clamp(32px, 4vw, 48px); }
@@ -737,7 +692,6 @@ p.fcc { margin-top: 16px; max-width: 46em; padding: 10px 14px; border-left: 3px 
 .get-list { display: grid; gap: 16px; }
 .get-item { scroll-margin-top: 88px; }
 .get-item h2 { font-size: clamp(26px, 1.2vw + 20px, 34px); font-weight: 700; }
-.get-item h3 { margin-top: 26px; font-size: 18px; font-weight: 700; letter-spacing: -.01em; }
 .get-body > p:not(.fine):not(.sha):not(.fcc) { margin-top: 12px; max-width: 46em; color: var(--text-2); }
 .get-body > p:first-child { margin-top: 14px; }
 .get-item .actions { margin-top: 24px; }
