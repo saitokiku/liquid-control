@@ -377,130 +377,45 @@ main { display: block; }
   align-items: center;
 }
 
-.hero h1 { font-size: clamp(38px, 3vw + 24px, 62px); font-weight: 700; letter-spacing: -.028em; }
+.hero h1 { font-size: clamp(36px, 2.2vw + 22px, 54px); font-weight: 700; letter-spacing: -.028em; }
 .hero .lede { margin-top: 20px; max-width: 34em; color: var(--text-2); font-size: clamp(18px, .5vw + 16px, 22px); }
 .hero .actions { margin-top: 32px; }
 .hero .fine { margin-top: 20px; max-width: 38em; color: var(--text-2); font-size: 15px; }
 
 .hero-art { display: flex; justify-content: center; padding: 16px 0 24px; }
+.hero h1 .h1-soft { display: block; color: var(--text-2); }
+
+/* The hero's real screenshots: the iPhone, with the watch in front of its lower corner. The bezel is the same two
+   rings the drawn phone had. */
+.shots { position: relative; margin: 0; padding: 12px 40px 28px 0; }
+.shot-phone {
+  --w: min(300px, 100vw - 2 * var(--gutter) - 72px);
+  width: var(--w);
+  aspect-ratio: 720 / 1564;
+  border-radius: calc(var(--w) * 62 / 402);
+  overflow: hidden;
+  background: #000;
+  box-shadow:
+    0 0 0 calc(var(--w) * 10 / 402) #1B1C20,
+    0 0 0 calc(var(--w) * 11.5 / 402) #3A3B40,
+    0 calc(var(--w) * 36 / 402) calc(var(--w) * 80 / 402) rgba(0, 0, 0, .28);
+}
+.shot-phone img, .shot-watch img { display: block; width: 100%; height: auto; }
+.shot-watch {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 44%;
+  aspect-ratio: 422 / 514;
+  border-radius: 24% / 20%;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 0 0 7px #1B1C20, 0 0 0 8.5px #3A3B40, 0 22px 48px rgba(0, 0, 0, .38);
+}
 
 @media (min-width: 960px) {
   .hero { grid-template-columns: minmax(0, 1fr) auto; gap: 56px; }
   .hero-art { padding: 0 24px 0 0; }
-}
-
-/* ---------- The remote (the hero rendering) ----------
-   Drawn from the app's layout (Phone/Remote: RemoteRoot, DeviceBar, Dock, RemoteStyle) on a 402 × 874 pt screen:
-   16 pt margins; the device bar, 48; the surface; the keys row, 48; the big row, 88, its sides round((w − 16) × 0.29).
-   One unit (--u) is one point, so the whole phone scales with its width. */
-
-.remote {
-  --w: min(340px, 100vw - 2 * var(--gutter) - 32px);
-  --u: calc(var(--w) / 402);
-  position: relative;
-  flex: none;
-  width: var(--w);
-  aspect-ratio: 402 / 874;
-  display: flex;
-  flex-direction: column;
-  padding: 0 calc(16 * var(--u)) calc(20 * var(--u));
-  border-radius: calc(62 * var(--u));
-  background: var(--bg);
-  color: var(--text);
-  box-shadow:
-    0 0 0 calc(10 * var(--u)) #1B1C20,
-    0 0 0 calc(11.5 * var(--u)) #3A3B40,
-    0 calc(36 * var(--u)) calc(80 * var(--u)) rgba(0, 0, 0, .28);
-  overflow: hidden;
-  font-size: calc(17 * var(--u));
-  font-weight: 600;
-  line-height: 1.2;
-  user-select: none;
-}
-
-.remote .ic {
-  width: calc(22 * var(--u));
-  height: calc(22 * var(--u));
-  flex: none;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.remote-status {
-  position: relative;
-  flex: none;
-  height: calc(62 * var(--u));
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 calc(18 * var(--u)) calc(6 * var(--u)) calc(24 * var(--u));
-}
-.remote-island {
-  position: absolute;
-  left: 50%;
-  top: calc(11 * var(--u));
-  width: calc(126 * var(--u));
-  height: calc(37 * var(--u));
-  border-radius: 999px;
-  background: #000;
-  transform: translateX(-50%);
-}
-.remote-status .battery { width: calc(27 * var(--u)); height: calc(13 * var(--u)); }
-
-.remote-bar,
-.remote-keys,
-.remote-big { flex: none; display: grid; gap: calc(8 * var(--u)); }
-.remote-bar { height: calc(48 * var(--u)); grid-template-columns: minmax(0, 1fr) repeat(3, calc(48 * var(--u))); }
-.remote-keys { height: calc(48 * var(--u)); grid-template-columns: minmax(0, 1fr) repeat(4, calc(48 * var(--u))); }
-.remote-big { height: calc(88 * var(--u)); margin-top: calc(8 * var(--u)); grid-template-columns: 29fr 42fr 29fr; }
-
-.remote .key {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: calc(8 * var(--u));
-  min-width: 0;
-  border-radius: 999px;
-  white-space: nowrap;
-}
-.remote .key.start { justify-content: flex-start; padding-left: calc(18 * var(--u)); }
-.remote .key.name { justify-content: flex-start; gap: calc(10 * var(--u)); padding: 0 calc(18 * var(--u)); }
-.remote .key.mic { background: var(--mac); color: #000; }
-.remote .key.mic .ic { width: calc(30 * var(--u)); height: calc(30 * var(--u)); }
-
-/* Rims are lit from below on the bar and from above on the dock: the sun sits between them. */
-.remote-bar .glass { --sun-angle: 115deg; }
-.remote-keys .glass, .remote-big .glass { --sun-angle: 55deg; }
-
-.remote-surface {
-  flex: 1;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  margin: calc(16 * var(--u)) 0;
-  padding: 0 calc(16 * var(--u)) calc(24 * var(--u));
-  border-radius: calc(32 * var(--u));
-  background: var(--surface);
-  color: var(--text);
-  font-size: calc(13 * var(--u));
-  font-weight: 400;
-  text-align: center;
-  text-wrap: balance;
-}
-
-.remote-home {
-  position: absolute;
-  left: 50%;
-  bottom: calc(8 * var(--u));
-  width: calc(140 * var(--u));
-  height: calc(5 * var(--u));
-  border-radius: 999px;
-  background: var(--text);
-  opacity: .85;
-  transform: translateX(-50%);
 }
 
 .c-mac { color: var(--mac); }
@@ -583,56 +498,31 @@ main { display: block; }
   border-radius: var(--radius-surface);
   padding: clamp(24px, 4vw, 48px);
 }
-/* The Stick, drawn: a USB-A plug and a glass body with its pairing button and its light. */
-.stick-art { display: grid; place-items: center; padding: 12px 0; }
-.stick-device { display: flex; align-items: center; width: min(100%, 360px); aspect-ratio: 3 / 1; }
-.stick-plug {
-  position: relative;
-  flex: none;
-  width: 21%;
-  height: 46%;
-  border-radius: 7px 0 0 7px;
-  background: var(--surface);
-  box-shadow: inset 0 0 0 1px var(--edge);
-}
-.stick-plug::after {
-  content: "";
+/* The Stick: four renders of the same shot, one per screen, faded in turn (16 s round). Only the screen changes, so
+   the cross-fade reads as the screen updating. Reduced motion shows the Connected one, still. */
+.stick-art { margin: 0; }
+.stick-renders { position: relative; aspect-ratio: 1400 / 870; }
+.stick-renders img {
   position: absolute;
-  left: 18%;
-  right: 0;
-  top: 30%;
-  bottom: 30%;
-  border-radius: 3px 0 0 3px;
-  background: var(--text-2);
-  opacity: .5;
-}
-.stick-body {
-  position: relative;
-  flex: 1;
+  inset: 0;
+  width: 100%;
   height: 100%;
-  border-radius: 34px;
+  opacity: 0;
+  animation: stick-screens 16s infinite both;
 }
-.stick-button {
-  position: absolute;
-  left: 46%;
-  top: 50%;
-  width: 18%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 1.5px var(--edge), inset 0 0 0 7px var(--hover);
-  transform: translate(-50%, -50%);
+.stick-renders img:nth-child(2) { animation-delay: 4s; }
+.stick-renders img:nth-child(3) { animation-delay: 8s; }
+.stick-renders img:nth-child(4) { animation-delay: 12s; }
+@keyframes stick-screens {
+  0% { opacity: 0; }
+  3%, 25% { opacity: 1; }
+  28%, 100% { opacity: 0; }
 }
-.stick-light {
-  position: absolute;
-  right: 13%;
-  top: 50%;
-  width: 4.5%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: var(--stick);
-  box-shadow: 0 0 14px 2px var(--stick);
-  transform: translateY(-50%);
+@media (prefers-reduced-motion: reduce) {
+  .stick-renders img { animation: none; }
+  .stick-renders img:nth-child(3) { opacity: 1; }
 }
+.stick-art figcaption { margin-top: 4px; color: var(--text-2); font-size: 13px; text-align: center; }
 .stick h2 { font-size: clamp(30px, 2.4vw + 20px, 46px); font-weight: 700; }
 .stick p { margin-top: 14px; color: var(--text-2); font-size: 18px; }
 .stick ul { margin-top: 18px; padding-left: 1.2em; color: var(--text-2); }
