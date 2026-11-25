@@ -104,14 +104,16 @@
     }
   }
 
-  // The trackpad: relative drags, like the app's. A short touch that barely moves is a tap.
-  let drag = null;
+  // The trackpad: relative drags, like the app's. A short touch that barely moves is a tap. One finger drives it: a
+  // second finger on the pad is ignored, so the pointer doesn't jump to it.
+  let drag = null, padUp = -Infinity;
   pad.addEventListener("pointerdown", (e) => {
+    if (!e.isPrimary) return;
     capture(pad, e);
-    drag = { x: e.clientX, y: e.clientY, t: performance.now(), moved: 0, swipe: 0 };
+    drag = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), moved: 0, swipe: 0 };
   });
   pad.addEventListener("pointermove", (e) => {
-    if (!drag) return;
+    if (!drag || e.pointerId !== drag.id) return;
     const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
     drag.x = e.clientX;
     drag.y = e.clientY;
@@ -129,12 +131,16 @@
       }
     }
   });
-  const end = () => {
-    if (drag && drag.moved < 8 && performance.now() - drag.t < 350) tap();
+  pad.addEventListener("pointerup", (e) => {
+    padUp = performance.now();
+    if (!drag || e.pointerId !== drag.id) return;
+    if (drag.moved < 8 && padUp - drag.t < 350) tap();
     drag = null;
-  };
-  pad.addEventListener("pointerup", end);
-  pad.addEventListener("pointercancel", () => { drag = null; });
+  });
+  pad.addEventListener("pointercancel", (e) => { if (drag && e.pointerId === drag.id) drag = null; });
+  // A screen reader or Voice Control taps with a click alone. The click a touch or a mouse makes comes right after its
+  // pointerup, which has already been handled.
+  pad.addEventListener("click", () => { if (performance.now() - padUp > 500) tap(); });
   pad.addEventListener("keydown", (e) => {
     const step = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
     if (step) {
