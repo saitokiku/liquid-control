@@ -6,13 +6,16 @@
   if (!demo) return;
   const $ = (s) => demo.querySelector(s);
   const live = $(".demo-live");
+  const question = $(".demo-question");
   const screen = $(".demo-screen");
   const pad = $(".demo-pad");
   const input = $(".demo-type input");
   const mic = $(".demo-mic");
   const pointer = $(".pointer");
   const ripple = $(".ripple");
+  const notes = $(".mac-text");
   const term = $(".term-out");
+  const termWin = $(".mac-term");
   const play = $(".tv-play");
   const tiles = [...demo.querySelectorAll(".tv-tile")];
   const keys = [...demo.querySelectorAll(".demo-keys button")];
@@ -24,14 +27,29 @@
 
   let mode = "mac";
   const text = { mac: "", tv: "" };
+  const left = { mac: [], tv: [] };   // the words of each device's spoken line still to come (the mic, below)
   let px = 0.46, py = 0.42;   // the pointer, as fractions of the screen
   let focus = 1;              // the TV tile with the focus ring
   let task = 0, asking = false, nextTask = 0;
   let lines = [];
 
-  const say = (t) => { live.textContent = t; };
+  // A live region speaks when its words change, so each message clears it first and arrives a moment later: the same
+  // words twice ("Clicked.") are heard twice.
+  let saying = 0;
+  const say = (t) => {
+    clearTimeout(saying);
+    live.textContent = "";
+    saying = setTimeout(() => { live.textContent = t; }, 100);
+  };
   const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
   const capture = (el, e) => { try { el.setPointerCapture(e.pointerId); } catch { /* not an active pointer */ } };
+
+  // Typed text goes to the device it was typed on, and a spoken line cut short isn't picked up again after it.
+  function write(m, s) {
+    if (!s) return;
+    text[m] += s;
+    left[m] = [];
+  }
 
   function show() {
     typed.mac.textContent = text.mac + (mode === "mac" ? input.value : "");
@@ -40,35 +58,64 @@
     pointer.style.top = py * 100 + "%";
     tiles.forEach((t, i) => t.classList.toggle("focus", i === focus));
     term.textContent = lines.join("\n");
+    // The windows don't grow. Notes and the TV's search field scroll to the newest words and the caret, as real ones
+    // do. The terminal lets its oldest lines go, never the agent's question and its keys, so a phone-width screen
+    // still shows them. The device not on screen measures nothing; it's fitted when it comes back.
+    notes.scrollTop = notes.scrollHeight;
+    typed.tv.scrollLeft = typed.tv.scrollWidth;
+    while (lines.length > 2 && term.getBoundingClientRect().bottom > termWin.getBoundingClientRect().bottom + 0.5) {
+      lines.shift();
+      term.textContent = lines.join("\n");
+    }
   }
 
-  function ask() {
+  // The agent's question is on the screen, which a screen reader doesn't see. So it's also the Mac keys' description,
+  // and it's read out as it comes, on the Mac, all but the first: that one is there when the page opens.
+  function ask(quiet) {
     asking = true;
-    lines = lines.slice(-3).concat([`● The agent wants to ${TASKS[task]}.`, "  ↩ Approve   esc Stop"]);
+    question.textContent = `The agent wants to ${TASKS[task]}.`;
+    lines = lines.slice(-3).concat([`● ${question.textContent}`, "  ↩ Approve   esc Stop"]);
+    labelKeys(mode);
+    if (!quiet && mode === "mac") say(question.textContent);
     show();
   }
 
   function answer(ok) {
-    if (!asking) return;
+    if (!asking) return say("Nothing to answer yet.");
     asking = false;
+    labelKeys(mode);
+    question.textContent = "";
     lines = lines.slice(0, -2).concat([ok ? DONE[task] : "✕ Stopped."]);
     say(ok ? `Approved: the agent will ${TASKS[task]}.` : "Stopped the agent.");
     task = (task + 1) % TASKS.length;
     show();
     clearTimeout(nextTask);
-    nextTask = setTimeout(ask, 1800);
+    nextTask = setTimeout(() => ask(false), 1800);
   }
 
   function setMode(m) {
     if (m === mode) return;
-    text[mode] += input.value;   // what was typed stays on the device it went to
+    stopTalk();                 // a spoken line stops at the switch, on the device it was going to
+    write(mode, input.value);   // as does what was typed
     input.value = "";
     mode = m;
     demo.dataset.mode = m;
     demo.querySelectorAll(".demo-bar button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.mode === m)));
-    keys.forEach((k, i) => { k.textContent = KEYS[m][i]; });
-    say(m === "mac" ? "Now controlling the Mac." : "Now controlling the TV.");
+    labelKeys(m);
+    say(m === "mac" ? `Now controlling the Mac.${asking ? " " + question.textContent : ""}` : "Now controlling the TV.");
     show();
+  }
+
+  // The two keys' words for the device; on the Mac, the agent's question describes them. Between an answer and the
+  // next question they have nothing to answer: they show it, dimmed, and say so if pressed (answer, above).
+  function labelKeys(m) {
+    keys.forEach((k, i) => {
+      k.textContent = KEYS[m][i];
+      if (m === "mac") k.setAttribute("aria-describedby", question.id);
+      else k.removeAttribute("aria-describedby");
+      if (m === "mac" && !asking) k.setAttribute("aria-disabled", "true");
+      else k.removeAttribute("aria-disabled");
+    });
   }
 
   function moveFocus(step) {
@@ -93,14 +140,17 @@
     }
   }
 
-  // The trackpad: relative drags, like the app's. A short touch that barely moves is a tap.
-  let drag = null;
+  // The trackpad: relative drags, like the app's. A short touch that barely moves is a tap. One finger drives it: a
+  // second finger on the pad is ignored, so the pointer doesn't jump to it. So are a mouse's other buttons: a
+  // right-click isn't a tap.
+  let drag = null, padUp = -Infinity;
   pad.addEventListener("pointerdown", (e) => {
+    if (!e.isPrimary || e.button !== 0) return;
     capture(pad, e);
-    drag = { x: e.clientX, y: e.clientY, t: performance.now(), moved: 0, swipe: 0 };
+    drag = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), moved: 0, swipe: 0 };
   });
   pad.addEventListener("pointermove", (e) => {
-    if (!drag) return;
+    if (!drag || e.pointerId !== drag.id) return;
     const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
     drag.x = e.clientX;
     drag.y = e.clientY;
@@ -118,12 +168,16 @@
       }
     }
   });
-  const end = () => {
-    if (drag && drag.moved < 8 && performance.now() - drag.t < 350) tap();
+  pad.addEventListener("pointerup", (e) => {
+    padUp = performance.now();
+    if (!drag || e.pointerId !== drag.id) return;
+    if (drag.moved < 8 && padUp - drag.t < 350) tap();
     drag = null;
-  };
-  pad.addEventListener("pointerup", end);
-  pad.addEventListener("pointercancel", () => { drag = null; });
+  });
+  pad.addEventListener("pointercancel", (e) => { if (drag && e.pointerId === drag.id) drag = null; });
+  // A screen reader or Voice Control taps with a click alone. The click a touch or a mouse makes comes right after its
+  // pointerup, which has already been handled.
+  pad.addEventListener("click", () => { if (performance.now() - padUp > 500) tap(); });
   pad.addEventListener("keydown", (e) => {
     const step = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
     if (step) {
@@ -142,33 +196,40 @@
   keys.forEach((k, i) => k.addEventListener("click", () => {
     if (mode === "mac") answer(i === 0);
     else if (i === 0) { play.classList.remove("on"); say("Back."); }
-    else { play.classList.remove("on"); focus = 0; text.tv = ""; input.value = ""; say("Home."); show(); }
+    else { play.classList.remove("on"); focus = 0; text.tv = ""; left.tv = []; input.value = ""; say("Home."); show(); }
   }));
 
   input.addEventListener("input", show);
   input.addEventListener("keydown", (e) => {
     if (e.key !== "Enter") return;
     e.preventDefault();
-    text[mode] += input.value + (mode === "mac" ? "\n" : "");
+    write(mode, input.value + (mode === "mac" ? "\n" : ""));
     input.value = "";
     say(mode === "mac" ? "Typed on the Mac." : "Searching on the TV.");
     show();
   });
 
-  // Hold to talk: the line arrives a word at a time while the mic is held, as live dictation does.
-  let words = [], talking = 0;
+  // Hold to talk: the line arrives a word at a time while the mic is held, as live dictation does, into the device it
+  // started on. Let go before its end and the next hold carries on from there. A tap too short to catch a word, or a
+  // click on its own (a screen reader or Voice Control presses with a click alone), says the rest of the line.
+  let talking = 0, into = mode, heard = 0, micUp = -Infinity;
   function startTalk(e) {
     if (talking) return;
     e.preventDefault();
-    if (e.pointerId !== undefined) capture(mic, e);
-    text[mode] += input.value;
+    if (e.type === "pointerdown") capture(mic, e);
+    into = mode;
+    write(into, input.value);
     input.value = "";
-    words = SPOKEN[mode].split(" ");
-    if (text[mode] && !/\s$/.test(text[mode])) text[mode] += " ";
+    if (!left[into].length) {
+      left[into] = SPOKEN[into].split(" ");
+      if (text[into] && !/\s$/.test(text[into])) text[into] += " ";
+    }
+    heard = 0;
     demo.classList.add("listening");
     talking = setInterval(() => {
-      if (!words.length) return stopTalk();
-      text[mode] += words.shift() + (words.length ? " " : "");
+      if (!left[into].length) return stopTalk();
+      text[into] += left[into].shift() + (left[into].length ? " " : "");
+      heard++;
       show();
     }, 170);
   }
@@ -177,17 +238,37 @@
     clearInterval(talking);
     talking = 0;
     demo.classList.remove("listening");
-    say(mode === "mac" ? "Dictated into Notes on the Mac." : "Dictated into the TV's search.");
+    if (heard) say(into === "mac" ? "Dictated into Notes on the Mac." : "Dictated into the TV's search.");
   }
-  mic.addEventListener("pointerdown", startTalk);
-  mic.addEventListener("pointerup", stopTalk);
+  // Letting go ends a hold where it is; a tap that caught no word lets the line run to its end.
+  function release() {
+    micUp = performance.now();
+    if (heard) stopTalk();
+  }
+  // A mouse's other buttons neither hold the mic nor let it go.
+  mic.addEventListener("pointerdown", (e) => { if (e.button === 0) startTalk(e); });
+  mic.addEventListener("pointerup", (e) => { if (e.button === 0) release(); });
   mic.addEventListener("pointercancel", stopTalk);
-  mic.addEventListener("keydown", (e) => { if ((e.key === " " || e.key === "Enter") && !e.repeat) startTalk(e); });
-  mic.addEventListener("keyup", (e) => { if (e.key === " " || e.key === "Enter") stopTalk(); });
+  mic.addEventListener("keydown", (e) => {
+    if (e.key !== " " && e.key !== "Enter") return;
+    e.preventDefault();   // the key is the hold, so it makes no click, nor one for each repeat
+    if (!e.repeat) startTalk(e);
+  });
+  mic.addEventListener("keyup", (e) => { if (e.key === " " || e.key === "Enter") release(); });
+  // The click that ends a press comes moments after it; only a click on its own starts the line.
+  mic.addEventListener("click", (e) => { if (performance.now() - micUp > 500) startTalk(e); });
   mic.addEventListener("contextmenu", (e) => e.preventDefault());
 
   demo.querySelectorAll(".demo-bar button").forEach((b) => b.addEventListener("click", () => setMode(b.dataset.mode)));
-  keys.forEach((k, i) => { k.textContent = KEYS.mac[i]; });
+  // The screen scales with the window, so what fits in it changes too.
+  let frame = 0;
+  addEventListener("resize", () => {
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(show);
+  });
+  labelKeys("mac");
   lines = ["$ agent"];
-  ask();
+  // Everything works now, so the section shows (index.html hides it until here).
+  demo.closest("section").hidden = false;
+  ask(true);
 })();

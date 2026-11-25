@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Support: Liquid Control</title>
   <meta name="description" content="Answers to common questions about Liquid Control, pairing and devices, and how to report a problem.">
   <meta name="color-scheme" content="light dark">
@@ -14,18 +16,22 @@
   <meta property="og:description" content="Answers to common questions, and how to report a problem.">
   <meta property="og:url" content="https://saitokiku.github.io/liquid-control/support/">
   <meta property="og:image" content="https://saitokiku.github.io/liquid-control/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Liquid Control on an iPhone controlling a Mac, with the headline “Hit Enter without getting up. One remote for your Mac, your PC and your TV.”">
   <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://saitokiku.github.io/liquid-control/support/">
   <link rel="icon" href="../assets/icon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="../assets/icon-180.png">
-  <link rel="stylesheet" href="../assets/site.css">
-  <script src="../assets/site.js" defer></script>
+  <link rel="stylesheet" href="../assets/site.css?v=b42fe100">
+  <script src="../assets/site.js?v=db268793" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="site-header wrap">
     <nav class="nav glass" aria-label="Main">
-      <a class="brand" href="../"><img src="../assets/icon-180.png" width="30" height="30" alt="">Liquid Control</a>
+      <a class="brand" href="../"><img src="../assets/icon-96.webp" width="30" height="30" alt="">Liquid Control</a>
       <ul class="nav-links">
         <li><a href="../#features">Features</a></li>
         <li><a href="../#works">Works with</a></li>
@@ -52,7 +58,11 @@
         </article>
         <article class="card glass" id="which">
           <h3>Which entry in the Bluetooth list is my phone?</h3>
-          <p>Your iPhone shows up as “Liquid Control” and a four-character code of its own, like “Liquid Control 3F2A”.</p>
+          <p>An iPhone shows up as “Liquid Control” and a four-character code of its own, like “Liquid Control 3F2A”,
+            while you add the device in the app. Once it’s connected, and on some computers from the start, the list
+            can show the iPhone’s own name instead, the one in Settings → General → About → Name: iOS gives that name,
+            and apps can’t change it.</p>
+          <p>An Android phone shows up under its own Bluetooth name, which the app shows while you add the device.</p>
         </article>
         <article class="card glass" id="mac">
           <h3>How do I use it with a Mac?</h3>
@@ -61,8 +71,10 @@
         </article>
         <article class="card glass" id="stick">
           <h3>How do I pair a Stick?</h3>
-          <p>Hold its button for 3 seconds, then add it in the app. The Stick is on
-            <a href="../get/#stick">pre-order</a>, shipping February 2027.</p>
+          <p>Plug it in and add it as a device in Liquid Control: the app walks you through pairing. Its firmware
+            hasn’t run on a Stick yet, so the steps may still change. The Stick is on
+            <a href="../get/#stick">pre-order</a>, shipping February 2027; delivery depends on its FCC equipment
+            authorization, and nothing ships before then.</p>
         </article>
         <article class="card glass" id="android">
           <h3>Is there an Android app?</h3>
@@ -82,6 +94,8 @@
         <h2 class="subhead" id="report-title">Report a problem</h2>
         <p>Tell us what happened, on which phone or watch, with which device, and the app version. Reports are
           GitHub issues, and issues are public: don’t include passwords, emails or anything personal.</p>
+        <p>Found a security problem, like a way into pairing or the passwords Liquid Control types? Don’t put it in an
+          issue: <a href="https://github.com/saitokiku/liquid-control/security/policy">report it privately</a>.</p>
         <div class="actions">
           <a class="btn btn-primary" href="https://github.com/saitokiku/liquid-control/issues/new/choose">Report a problem</a>
         </div>
@@ -97,6 +111,7 @@
       <li><a href="https://github.com/saitokiku/liquid-control">GitHub</a></li>
     </ul>
     <p>This site sets no cookies and runs no analytics.</p>
+    <p>Roku, Google TV, Android TV, Android, ChromeOS, LG, webOS, Samsung, Sonos, Google Cast, Windows and Linux are trademarks of their owners. Liquid Control isn't affiliated with or endorsed by any of them.</p>
     <p>© 2026 Manan Bhardwaj</p>
   </footer>
 </body>

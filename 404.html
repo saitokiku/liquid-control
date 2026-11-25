@@ -3,24 +3,27 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Page not found: Liquid Control</title>
   <meta name="description" content="This page isn’t on the Liquid Control site. The home page and the downloads are a tap away.">
   <meta name="robots" content="noindex">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-  <!-- GitHub Pages serves this page at whatever address was missing, so every link starts at the site's root. -->
+  <!-- GitHub Pages serves this page at whatever address was missing, so every link starts at the site's root:
+       /liquid-control/ on github.io. A custom domain (a CNAME file) moves the root to /, and these links with it. -->
   <link rel="icon" href="/liquid-control/assets/icon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="/liquid-control/assets/icon-180.png">
-  <link rel="stylesheet" href="/liquid-control/assets/site.css">
-  <script src="/liquid-control/assets/site.js" defer></script>
+  <link rel="stylesheet" href="/liquid-control/assets/site.css?v=b42fe100">
+  <script src="/liquid-control/assets/site.js?v=db268793" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="site-header wrap">
     <nav class="nav glass" aria-label="Main">
-      <a class="brand" href="/liquid-control/"><img src="/liquid-control/assets/icon-180.png" width="30" height="30" alt="">Liquid Control</a>
+      <a class="brand" href="/liquid-control/"><img src="/liquid-control/assets/icon-96.webp" width="30" height="30" alt="">Liquid Control</a>
       <ul class="nav-links">
         <li><a href="/liquid-control/#features">Features</a></li>
         <li><a href="/liquid-control/#works">Works with</a></li>
@@ -48,6 +51,7 @@
       <li><a href="/liquid-control/privacy/">Privacy</a></li>
       <li><a href="https://github.com/saitokiku/liquid-control">GitHub</a></li>
     </ul>
+    <p>Roku, Google TV, Android TV, Android, ChromeOS, LG, webOS, Samsung, Sonos, Google Cast, Windows and Linux are trademarks of their owners. Liquid Control isn't affiliated with or endorsed by any of them.</p>
     <p>© 2026 Manan Bhardwaj</p>
   </footer>
 </body>

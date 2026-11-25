@@ -1,0 +1,4 @@
+# Pages serves the LF bytes the repository holds, and the README's `sha256sum assets/site.css | cut -c1-8` must hash
+# those bytes; without this, a clone on Windows checks text out with CRLF. (An existing Windows clone needs a fresh
+# checkout once: with nothing uncommitted, `git rm -r -q --cached . && git reset -q --hard`.)
+* text=auto eol=lf

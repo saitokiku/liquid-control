@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Liquid Control: one remote for your Mac, your PC and your TV</title>
   <meta name="description" content="Liquid Control turns your iPhone, Apple Watch or Android phone into the trackpad, keyboard and remote for your Mac, PC, iPad and TV. Free beta on TestFlight and for Android.">
   <meta name="color-scheme" content="light dark">
@@ -18,18 +20,20 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Liquid Control on an iPhone controlling a Mac, with the headline “Hit Enter without getting up. One remote for your Mac, your PC and your TV.”">
   <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://saitokiku.github.io/liquid-control/">
   <link rel="icon" href="assets/icon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="assets/icon-180.png">
-  <link rel="stylesheet" href="assets/site.css">
-  <script src="assets/site.js" defer></script>
-  <script src="assets/demo.js" defer></script>
+  <link rel="stylesheet" href="assets/site.css?v=b42fe100">
+  <!-- demo.js runs first because it shows Try it here, and site.js lights each piece of glass from where it sits. -->
+  <script src="assets/demo.js?v=0055e276" defer></script>
+  <script src="assets/site.js?v=db268793" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="site-header wrap">
     <nav class="nav glass" aria-label="Main">
-      <a class="brand" href="./"><img src="assets/icon-180.png" width="30" height="30" alt="">Liquid Control</a>
+      <a class="brand" href="./"><img src="assets/icon-96.webp" width="30" height="30" alt="">Liquid Control</a>
       <ul class="nav-links">
         <li><a href="#features">Features</a></li>
         <li><a href="#works">Works with</a></li>
@@ -58,13 +62,14 @@
 
       <div class="hero-art">
         <figure class="shots">
-          <div class="shot-phone"><img src="assets/shot-trackpad.webp" width="720" height="1564" alt="Liquid Control on an iPhone, controlling a Mac: the Mac and three other devices at the top, the trackpad filling the screen with Safari’s address bar named as where typing goes, and Type, Delete, Return, esc, Click, the mic and Right-click at the bottom." fetchpriority="high"></div>
-          <div class="shot-watch"><img src="assets/shot-watch.webp" width="422" height="514" alt="The Apple Watch app controlling a MacBook Pro: Approve, Stop, 1, 2, 3, Control-C and Mode." loading="lazy"></div>
+          <div class="shot-phone"><img src="assets/shot-trackpad.webp" width="720" height="1564" alt="Liquid Control on an iPhone, controlling a Mac: the Mac and three other devices at the top, the trackpad filling the screen, and Type, Delete, Return, esc, Click, the mic and Right-click at the bottom." fetchpriority="high"></div>
+          <div class="shot-watch"><img src="assets/shot-watch.webp" width="422" height="514" alt="The Apple Watch app controlling a MacBook Pro: Approve, Stop, 1, 2, 3, Control-C and Mode."></div>
         </figure>
       </div>
     </section>
 
-    <section class="section wrap" id="try" aria-labelledby="try-title">
+    <!-- Hidden until assets/demo.js has set the demo up: without it, its controls would do nothing. -->
+    <section class="section wrap" id="try" aria-labelledby="try-title" hidden>
       <div class="section-head">
         <h2 id="try-title">Try it here</h2>
         <p>Drag on the trackpad, type, or hold the mic. Tap TV at the top of the phone to switch to the TV.</p>
@@ -114,6 +119,7 @@
             <button type="button" class="demo-mic" aria-label="Hold to talk"><svg viewBox="0 0 24 24"><rect x="8.5" y="2.5" width="7" height="12" rx="3.5"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5"/></svg></button>
           </div>
         </div>
+        <p class="visually-hidden demo-question" id="demo-question"></p>
         <p class="visually-hidden demo-live" aria-live="polite"></p>
       </div>
     </section>
@@ -133,8 +139,8 @@
         <article class="card glass">
           <span class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="12" r="4.5"/><path d="M12.5 12H21M18 12v3.5M21 12v2.5"/></svg></span>
           <h3>Passwords without typing them</h3>
-          <p>Pick a password from your iPhone’s Passwords and Liquid Control types it into the device you chose. It’s
-            never stored, shown or logged.</p>
+          <p>Pick a password from your iPhone’s Passwords and Liquid Control types it into the computer or tablet you
+            chose. It’s never stored, shown or logged.</p>
           <span class="tag">iPhone</span>
         </article>
         <article class="card glass">
@@ -171,7 +177,8 @@
           <div>
             <h3>Tablets and phones</h3>
             <p class="brands">iPad, and Android tablets and phones</p>
-            <p>They pair over Bluetooth the same way.</p>
+            <p>They pair over Bluetooth the same way. Some Android devices don’t list Liquid Control, and those can’t
+              be added yet.</p>
           </div>
         </article>
         <article>
@@ -196,7 +203,8 @@
           <div>
             <h3>Anything with a USB port</h3>
             <p class="brands">Older TVs, game consoles, locked-down PCs</p>
-            <p>Plug in <a href="#stick">the Stick</a> and it types what your phone sends. It’s on pre-order.</p>
+            <p>Plug in <a href="#stick">the Stick</a> and it types what your phone sends. It’s on pre-order, and its
+              delivery depends on FCC equipment authorization.</p>
           </div>
         </article>
       </div>
@@ -205,12 +213,17 @@
     <section class="section wrap" id="stick" aria-labelledby="stick-title">
       <div class="stick glass">
         <figure class="stick-art">
-          <div class="stick-renders" role="img" aria-label="The Liquid Control Stick: a clear USB stick with a small screen. The screen cycles through Liquid Control, a pairing code to check on your phone, Connected to an iPhone and typing into a Mac, and a Watch and an iPhone typing into a PC.">
-            <img src="assets/stick-1-start.webp" width="1400" height="870" alt="" loading="lazy" decoding="async">
-            <img src="assets/stick-2-pair.webp" width="1400" height="870" alt="" loading="lazy" decoding="async">
-            <img src="assets/stick-3-connected.webp" width="1400" height="870" alt="" loading="lazy" decoding="async">
-            <img src="assets/stick-4-two.webp" width="1400" height="870" alt="" loading="lazy" decoding="async">
+          <div class="stick-renders" role="img" aria-label="The Liquid Control Stick: a clear USB stick with a small screen. The screen cycles through Liquid Control, a six-digit pairing code to compare with your phone’s, a phone connected to a Mac, and a watch and a phone connected to a PC.">
+            <img src="assets/stick-1-start-980.webp" srcset="assets/stick-1-start-980.webp 980w, assets/stick-1-start.webp 1400w"
+              sizes="(min-width: 860px) 444px, calc(100vw - 80px)" width="1400" height="870" alt="" loading="lazy" decoding="async">
+            <img src="assets/stick-2-pair-980.webp" srcset="assets/stick-2-pair-980.webp 980w, assets/stick-2-pair.webp 1400w"
+              sizes="(min-width: 860px) 444px, calc(100vw - 80px)" width="1400" height="870" alt="" loading="lazy" decoding="async">
+            <img src="assets/stick-3-connected-980.webp" srcset="assets/stick-3-connected-980.webp 980w, assets/stick-3-connected.webp 1400w"
+              sizes="(min-width: 860px) 444px, calc(100vw - 80px)" width="1400" height="870" alt="" loading="lazy" decoding="async">
+            <img src="assets/stick-4-two-980.webp" srcset="assets/stick-4-two-980.webp 980w, assets/stick-4-two.webp 1400w"
+              sizes="(min-width: 860px) 444px, calc(100vw - 80px)" width="1400" height="870" alt="" loading="lazy" decoding="async">
           </div>
+          <button type="button" class="stick-pause" hidden>Pause</button>
           <figcaption>A render: LilyGO’s T-Dongle-S3 with the screens our firmware will show.</figcaption>
         </figure>
         <div>
@@ -222,18 +235,20 @@
             <li>Pairs once, with a code you check on both screens. After that, everything it gets is encrypted.</li>
             <li>No network connection, and it keeps nothing you type.</li>
           </ul>
-          <div class="actions">
-            <a class="btn btn-primary" href="https://buy.stripe.com/fZu8wR2SpabLe6BgTB33W00">Pre-order, $34.99</a>
-          </div>
-          <p class="fine">$34.99 plus sales tax, up to 5 an order, US addresses only, free shipping; it ships in
-            February 2027. Stripe takes the payment, and your receipt and card statement show Kaizenedu.net. To cancel,
-            reply to your receipt. Not ready to pay? <a href="https://github.com/saitokiku/liquid-control/issues/new?template=stick.yml">Get notified</a> instead: a short form on GitHub,
-            where your GitHub name is public.</p>
+          <p>Its firmware is written, but it hasn’t run on a Stick yet, so how it pairs may still change before it
+            ships.</p>
           <p class="fcc"><strong>Pre-orders and the FCC:</strong> The Stick is subject to the FCC’s rules, and delivery
             depends on it completing FCC equipment authorization: nothing ships before then. FCC rules don’t address
             consumer protection, contract or other federal or state law, which still apply to your order. If
             authorization isn’t granted, every pre-order is refunded in full, and you can cancel yours for a full refund
             any time before it ships.</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="https://buy.stripe.com/fZu8wR2SpabLe6BgTB33W00">Pre-order, $34.99</a>
+          </div>
+          <p class="fine">$34.99 plus sales tax, up to 5 an order, US addresses only, free shipping; it ships in
+            February 2027. You’re charged in full when you order: Stripe takes the payment, and your receipt and card
+            statement show Kaizenedu.net. To cancel, reply to your receipt. Not ready to pay? <a href="https://github.com/saitokiku/liquid-control/issues/new?template=stick.yml">Get notified</a> instead: a short form on GitHub,
+            where your GitHub name is public.</p>
         </div>
       </div>
     </section>
@@ -259,6 +274,7 @@
       <li><a href="https://github.com/saitokiku/liquid-control">GitHub</a></li>
     </ul>
     <p>This site sets no cookies and runs no analytics.</p>
+    <p>Roku, Google TV, Android TV, Android, ChromeOS, LG, webOS, Samsung, Sonos, Google Cast, Windows and Linux are trademarks of their owners. Liquid Control isn't affiliated with or endorsed by any of them.</p>
     <p>© 2026 Manan Bhardwaj</p>
   </footer>
 </body>

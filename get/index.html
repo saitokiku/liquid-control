@@ -3,29 +3,35 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Get Liquid Control: iPhone beta, Android beta and the Stick</title>
-  <meta name="description" content="Every download and link for Liquid Control: the iPhone and Apple Watch beta on TestFlight, the Android beta, the Stick on pre-order, and how to pair your Mac, PC, iPad and TV.">
+  <meta name="description" content="Every download and link for Liquid Control: the iPhone and Apple Watch beta on TestFlight, the Android beta, the Stick on pre-order (delivery depends on FCC authorization), and how to pair your Mac, PC, iPad and TV.">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Liquid Control">
   <meta property="og:title" content="Get Liquid Control">
-  <meta property="og:description" content="The iPhone and Apple Watch beta, the Android beta, and the Stick on pre-order.">
+  <meta property="og:description" content="The iPhone and Apple Watch beta, the Android beta, and the Stick on pre-order (delivery depends on FCC authorization).">
   <meta property="og:url" content="https://saitokiku.github.io/liquid-control/get/">
   <meta property="og:image" content="https://saitokiku.github.io/liquid-control/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Liquid Control on an iPhone controlling a Mac, with the headline “Hit Enter without getting up. One remote for your Mac, your PC and your TV.”">
   <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://saitokiku.github.io/liquid-control/get/">
   <link rel="icon" href="../assets/icon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="../assets/icon-180.png">
-  <link rel="stylesheet" href="../assets/site.css">
-  <script src="../assets/site.js" defer></script>
+  <link rel="stylesheet" href="../assets/site.css?v=b42fe100">
+  <script src="../assets/site.js?v=db268793" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="site-header wrap">
     <nav class="nav glass" aria-label="Main">
-      <a class="brand" href="../"><img src="../assets/icon-180.png" width="30" height="30" alt="">Liquid Control</a>
+      <a class="brand" href="../"><img src="../assets/icon-96.webp" width="30" height="30" alt="">Liquid Control</a>
       <ul class="nav-links">
         <li><a href="../#features">Features</a></li>
         <li><a href="../#works">Works with</a></li>
@@ -40,7 +46,7 @@
     <div class="page-head">
       <h1>Get Liquid Control</h1>
       <p>The apps are free, in public beta: get the one for your phone, then add your devices from the app. The
-        Stick is on pre-order.</p>
+        Stick is on pre-order, and its delivery depends on FCC equipment authorization.</p>
     </div>
 
     <div class="get-list">
@@ -50,8 +56,8 @@
           <h2 id="iphone-title">iPhone and Apple Watch</h2>
         </div>
         <div class="get-body">
-          <p>The public beta is on TestFlight, Apple’s app for betas. It needs iOS 17 or later, and the Apple Watch
-            app comes with it. The App Store comes soon.</p>
+          <p>The public beta is on TestFlight, Apple’s app for betas. It needs iOS 17 or later; the Apple Watch app
+            comes with it and needs watchOS 10 or later. The App Store comes soon.</p>
           <ol class="steps">
             <li>On your iPhone, tap Join the beta. If you don’t have TestFlight yet, the page takes you to it first.</li>
             <li>In TestFlight, tap Accept, then Install.</li>
@@ -72,7 +78,9 @@
           <h2 id="android-title">Android</h2>
         </div>
         <div class="get-body">
-          <p>The public beta is a download, for Android 12 or newer. Google Play comes later.</p>
+          <p>The public beta is a download, for Android 12 or newer running 64-bit Android on ARM (arm64-v8a). It
+            won’t install on a phone that runs 32-bit Android, as some low-cost phones do even with a 64-bit chip, or
+            on an x86 one. Google Play comes later.</p>
           <ol class="steps">
             <li>On your Android phone, tap Download.</li>
             <li>Open the file. If Android asks, let your browser install apps (Install unknown apps), then tap
@@ -82,8 +90,9 @@
           <div class="actions">
             <a class="btn btn-primary" href="https://github.com/saitokiku/liquid-control/releases/download/android-v0.1.0-beta.1/liquid-control-android-0.1.0-beta.1.apk">Download (49 MB)</a>
           </div>
-          <p class="fine">It’s a beta, so expect rough edges. Beta 1, version 0.1.0. Speakers (Sonos and Google Cast) are on the iPhone only for now. To
-            update, download the next beta here and install it over this one. What’s in it:
+          <p class="fine">It’s a beta, so expect rough edges. Beta 1, version 0.1.0. Voice typing needs a speech model,
+            a 105 MB download the app offers the first time you use the mic. Speakers (Sonos and Google Cast) are on
+            the iPhone only for now. To update, download the next beta here and install it over this one. What’s in it:
             <a href="https://github.com/saitokiku/liquid-control/releases/tag/android-v0.1.0-beta.1">release notes</a>.
             Something broke? <a href="../support/#report">Report a problem</a>.</p>
           <p class="sha">SHA-256: <code id="apk-sha256">41199181593b5f685dd420451a6a578bf3395bda1978533f6907b4e668caf4e4</code></p>
@@ -98,18 +107,18 @@
         <div class="get-body">
           <p>A small USB receiver for computers that can’t pair over Bluetooth: it types what your phone sends as a
             USB keyboard and mouse. It ships in February 2027.</p>
-          <div class="actions">
-            <a class="btn btn-primary" href="https://buy.stripe.com/fZu8wR2SpabLe6BgTB33W00">Pre-order, $34.99</a>
-          </div>
-          <p class="fine">$34.99 plus sales tax, up to 5 an order, US addresses only, free shipping; it ships in
-            February 2027. Stripe takes the payment, and your receipt and card statement show Kaizenedu.net. To cancel,
-            reply to your receipt. Not ready to pay? <a href="https://github.com/saitokiku/liquid-control/issues/new?template=stick.yml">Get notified</a> instead: a short form on GitHub,
-            where your GitHub name is public.</p>
           <p class="fcc"><strong>Pre-orders and the FCC:</strong> The Stick is subject to the FCC’s rules, and delivery
             depends on it completing FCC equipment authorization: nothing ships before then. FCC rules don’t address
             consumer protection, contract or other federal or state law, which still apply to your order. If
             authorization isn’t granted, every pre-order is refunded in full, and you can cancel yours for a full refund
             any time before it ships.</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="https://buy.stripe.com/fZu8wR2SpabLe6BgTB33W00">Pre-order, $34.99</a>
+          </div>
+          <p class="fine">$34.99 plus sales tax, up to 5 an order, US addresses only, free shipping; it ships in
+            February 2027. You’re charged in full when you order: Stripe takes the payment, and your receipt and card
+            statement show Kaizenedu.net. To cancel, reply to your receipt. Not ready to pay? <a href="https://github.com/saitokiku/liquid-control/issues/new?template=stick.yml">Get notified</a> instead: a short form on GitHub,
+            where your GitHub name is public.</p>
         </div>
       </section>
 
@@ -154,6 +163,7 @@
       <li><a href="https://github.com/saitokiku/liquid-control">GitHub</a></li>
     </ul>
     <p>This site sets no cookies and runs no analytics.</p>
+    <p>Roku, Google TV, Android TV, Android, ChromeOS, LG, webOS, Samsung, Sonos, Google Cast, Windows and Linux are trademarks of their owners. Liquid Control isn't affiliated with or endorsed by any of them.</p>
     <p>© 2026 Manan Bhardwaj</p>
   </footer>
 </body>
