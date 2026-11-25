@@ -617,12 +617,13 @@ main { display: block; }
   user-select: none;
 }
 .demo-pad:active { cursor: grabbing; }
-.pad-listening { display: none; color: var(--mac); font-weight: 600; }
+.pad-listening { display: none; color: var(--text); font-weight: 600; }
 .demo.listening .pad-hint { display: none; }
 .demo.listening .pad-listening { display: block; }
-.demo[data-mode="tv"] .pad-listening { color: var(--tv); }
 .demo-type { display: grid; grid-template-columns: minmax(0, 1fr) 64px; gap: 8px; }
 .demo-type input { min-width: 0; padding: 0 18px; font-size: 16px; font-weight: 400; }
+/* The browser's own placeholder grey is too faint on dark glass (3:1); --text-2 reads at 4.5:1 or more in both. */
+.demo-type input::placeholder { color: var(--text-2); opacity: 1; }
 .demo-phone .demo-mic { display: grid; place-items: center; border: 0; background: var(--mac); color: #000; touch-action: none; }
 .demo[data-mode="tv"] .demo-mic { background: var(--tv); }
 .demo-mic svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
