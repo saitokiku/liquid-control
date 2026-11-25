@@ -25,3 +25,35 @@
     });
   }
 })();
+
+// The menu: below 820 px the header has room for the name and Get it only, so its other links fold behind a Menu
+// button that opens them in a panel under the header (site.css). Escape, a click outside it, or a link closes it.
+(() => {
+  const nav = document.querySelector(".nav");
+  const links = nav?.querySelector(".nav-links");
+  if (!links) return;
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "menu-btn";
+  button.setAttribute("aria-label", "Menu");
+  button.setAttribute("aria-expanded", "false");
+  links.id = "site-menu";
+  button.setAttribute("aria-controls", links.id);
+  button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+  links.before(button);
+
+  const open = (on) => {
+    nav.classList.toggle("open", on);
+    button.setAttribute("aria-expanded", String(on));
+  };
+  button.addEventListener("click", () => open(!nav.classList.contains("open")));
+  links.addEventListener("click", (e) => { if (e.target.closest("a")) open(false); });
+  document.addEventListener("click", (e) => { if (!nav.contains(e.target)) open(false); });
+  // Tabbing on past the header closes it; a click elsewhere is the listener above.
+  nav.addEventListener("focusout", (e) => { if (e.relatedTarget && !nav.contains(e.relatedTarget)) open(false); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape" || !nav.classList.contains("open")) return;
+    open(false);
+    button.focus();
+  });
+})();
