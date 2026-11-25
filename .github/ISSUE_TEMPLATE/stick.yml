@@ -1,5 +1,5 @@
 name: Get notified about the Stick
-description: Join the waitlist for the Liquid Control Stick, the USB receiver for computers that can't pair over Bluetooth.
+description: Hear when there's news about the Liquid Control Stick, the USB receiver for computers that can't pair over Bluetooth.
 title: "Stick: notify me"
 labels: ["stick"]
 body:
@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         **Issues are public. Don't include passwords, emails or anything personal.**
-        The Stick isn't sold yet. Submit this form and GitHub will notify you when this issue gets the news. Your GitHub name is public here, and we ask for no email.
+        The Stick is on pre-order and isn't shipping yet: delivery depends on its FCC equipment authorization, and [Get it](https://saitokiku.github.io/liquid-control/get/#stick) has the details. This form doesn't order one. Submit it and GitHub will notify you when this issue gets the news. Your GitHub name is public here, and we ask for no email.
   - type: dropdown
     id: computer
     attributes:
