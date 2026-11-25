@@ -6,6 +6,7 @@
   if (!demo) return;
   const $ = (s) => demo.querySelector(s);
   const live = $(".demo-live");
+  const question = $(".demo-question");
   const screen = $(".demo-screen");
   const pad = $(".demo-pad");
   const input = $(".demo-type input");
@@ -32,7 +33,14 @@
   let task = 0, asking = false, nextTask = 0;
   let lines = [];
 
-  const say = (t) => { live.textContent = t; };
+  // A live region speaks when its words change, so each message clears it first and arrives a moment later: the same
+  // words twice ("Clicked.") are heard twice.
+  let saying = 0;
+  const say = (t) => {
+    clearTimeout(saying);
+    live.textContent = "";
+    saying = setTimeout(() => { live.textContent = t; }, 100);
+  };
   const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
   const capture = (el, e) => { try { el.setPointerCapture(e.pointerId); } catch { /* not an active pointer */ } };
 
@@ -61,21 +69,26 @@
     }
   }
 
-  function ask() {
+  // The agent's question is on the screen, which a screen reader doesn't see. So it's also the Mac keys' description,
+  // and it's read out as it comes, on the Mac, all but the first: that one is there when the page opens.
+  function ask(quiet) {
     asking = true;
-    lines = lines.slice(-3).concat([`● The agent wants to ${TASKS[task]}.`, "  ↩ Approve   esc Stop"]);
+    question.textContent = `The agent wants to ${TASKS[task]}.`;
+    lines = lines.slice(-3).concat([`● ${question.textContent}`, "  ↩ Approve   esc Stop"]);
+    if (!quiet && mode === "mac") say(question.textContent);
     show();
   }
 
   function answer(ok) {
     if (!asking) return;
     asking = false;
+    question.textContent = "";
     lines = lines.slice(0, -2).concat([ok ? DONE[task] : "✕ Stopped."]);
     say(ok ? `Approved: the agent will ${TASKS[task]}.` : "Stopped the agent.");
     task = (task + 1) % TASKS.length;
     show();
     clearTimeout(nextTask);
-    nextTask = setTimeout(ask, 1800);
+    nextTask = setTimeout(() => ask(false), 1800);
   }
 
   function setMode(m) {
@@ -86,9 +99,18 @@
     mode = m;
     demo.dataset.mode = m;
     demo.querySelectorAll(".demo-bar button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.mode === m)));
-    keys.forEach((k, i) => { k.textContent = KEYS[m][i]; });
-    say(m === "mac" ? "Now controlling the Mac." : "Now controlling the TV.");
+    labelKeys(m);
+    say(m === "mac" ? `Now controlling the Mac.${asking ? " " + question.textContent : ""}` : "Now controlling the TV.");
     show();
+  }
+
+  // The two keys' words for the device; on the Mac, the agent's question describes them.
+  function labelKeys(m) {
+    keys.forEach((k, i) => {
+      k.textContent = KEYS[m][i];
+      if (m === "mac") k.setAttribute("aria-describedby", question.id);
+      else k.removeAttribute("aria-describedby");
+    });
   }
 
   function moveFocus(step) {
@@ -237,7 +259,9 @@
     cancelAnimationFrame(frame);
     frame = requestAnimationFrame(show);
   });
-  keys.forEach((k, i) => { k.textContent = KEYS.mac[i]; });
+  labelKeys("mac");
   lines = ["$ agent"];
-  ask();
+  // Everything works now, so the section shows (index.html hides it until here).
+  demo.closest("section").hidden = false;
+  ask(true);
 })();

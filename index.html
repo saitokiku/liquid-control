@@ -64,7 +64,8 @@
       </div>
     </section>
 
-    <section class="section wrap" id="try" aria-labelledby="try-title">
+    <!-- Hidden until assets/demo.js has set the demo up: without it, its controls would do nothing. -->
+    <section class="section wrap" id="try" aria-labelledby="try-title" hidden>
       <div class="section-head">
         <h2 id="try-title">Try it here</h2>
         <p>Drag on the trackpad, type, or hold the mic. Tap TV at the top of the phone to switch to the TV.</p>
@@ -114,6 +115,7 @@
             <button type="button" class="demo-mic" aria-label="Hold to talk"><svg viewBox="0 0 24 24"><rect x="8.5" y="2.5" width="7" height="12" rx="3.5"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5"/></svg></button>
           </div>
         </div>
+        <p class="visually-hidden demo-question" id="demo-question"></p>
         <p class="visually-hidden demo-live" aria-live="polite"></p>
       </div>
     </section>
