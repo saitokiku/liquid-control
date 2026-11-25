@@ -624,12 +624,19 @@ main { display: block; }
 .demo-type input { min-width: 0; padding: 0 18px; font-size: 16px; font-weight: 400; }
 /* The browser's own placeholder grey is too faint on dark glass (3:1); --text-2 reads at 4.5:1 or more in both. */
 .demo-type input::placeholder { color: var(--text-2); opacity: 1; }
-.demo-phone .demo-mic { display: grid; place-items: center; border: 0; background: var(--mac); color: #000; touch-action: none; }
+.demo-phone .demo-mic { display: grid; place-items: center; border-color: transparent; background: var(--mac); color: #000; touch-action: none; }
 .demo[data-mode="tv"] .demo-mic { background: var(--tv); }
 .demo-mic svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 .demo-mic svg rect { fill: currentColor; }
 .demo.listening .demo-mic { box-shadow: 0 0 0 6px rgba(79, 139, 255, .3); }
 .demo-pad:focus-visible, .demo-phone button:focus-visible, .demo-type input:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
+/* Forced colours (Windows' contrast themes) drop backgrounds and shadows, so the demo's shapes also have edges that
+   stay transparent until then. There, the pressed Mac or TV button and the TV's focused tile get a thicker edge: a
+   mark that isn't a colour. */
+.demo-screen, .demo-phone, .mac-win, .tv-search, .tv-tile { outline: 1px solid transparent; }
+.demo-pad { border: 1px solid transparent; }
+.demo-bar [aria-pressed="true"] { border-width: 3px; }
+.tv-tile.focus { outline-width: 3px; }
 
 /* The screen and the trackpad have to fit in the window together, below the 70 px header (78 px with some air), or
    the pointer moves out of sight while you drag. A phone held sideways puts them side by side, as a wide window does;
