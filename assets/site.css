@@ -639,6 +639,8 @@ main { display: block; }
   font: 600 15px/1 var(--font);
 }
 .demo-phone button { cursor: pointer; }
+/* Approve and Stop between an answer and the agent's next question: nothing to answer yet (demo.js). */
+.demo-keys [aria-disabled="true"] { opacity: .5; cursor: default; }
 .demo-bar [aria-pressed="true"][data-mode="mac"] { background: var(--mac); border-color: var(--mac); color: #000; }
 .demo-bar [aria-pressed="true"][data-mode="tv"] { background: var(--tv); border-color: var(--tv); color: #000; }
 .demo-pad {

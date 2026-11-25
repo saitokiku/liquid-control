@@ -75,13 +75,15 @@
     asking = true;
     question.textContent = `The agent wants to ${TASKS[task]}.`;
     lines = lines.slice(-3).concat([`● ${question.textContent}`, "  ↩ Approve   esc Stop"]);
+    labelKeys(mode);
     if (!quiet && mode === "mac") say(question.textContent);
     show();
   }
 
   function answer(ok) {
-    if (!asking) return;
+    if (!asking) return say("Nothing to answer yet.");
     asking = false;
+    labelKeys(mode);
     question.textContent = "";
     lines = lines.slice(0, -2).concat([ok ? DONE[task] : "✕ Stopped."]);
     say(ok ? `Approved: the agent will ${TASKS[task]}.` : "Stopped the agent.");
@@ -104,12 +106,15 @@
     show();
   }
 
-  // The two keys' words for the device; on the Mac, the agent's question describes them.
+  // The two keys' words for the device; on the Mac, the agent's question describes them. Between an answer and the
+  // next question they have nothing to answer: they show it, dimmed, and say so if pressed (answer, above).
   function labelKeys(m) {
     keys.forEach((k, i) => {
       k.textContent = KEYS[m][i];
       if (m === "mac") k.setAttribute("aria-describedby", question.id);
       else k.removeAttribute("aria-describedby");
+      if (m === "mac" && !asking) k.setAttribute("aria-disabled", "true");
+      else k.removeAttribute("aria-disabled");
     });
   }
 
@@ -136,10 +141,11 @@
   }
 
   // The trackpad: relative drags, like the app's. A short touch that barely moves is a tap. One finger drives it: a
-  // second finger on the pad is ignored, so the pointer doesn't jump to it.
+  // second finger on the pad is ignored, so the pointer doesn't jump to it. So are a mouse's other buttons: a
+  // right-click isn't a tap.
   let drag = null, padUp = -Infinity;
   pad.addEventListener("pointerdown", (e) => {
-    if (!e.isPrimary) return;
+    if (!e.isPrimary || e.button !== 0) return;
     capture(pad, e);
     drag = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), moved: 0, swipe: 0 };
   });
@@ -239,8 +245,9 @@
     micUp = performance.now();
     if (heard) stopTalk();
   }
-  mic.addEventListener("pointerdown", startTalk);
-  mic.addEventListener("pointerup", release);
+  // A mouse's other buttons neither hold the mic nor let it go.
+  mic.addEventListener("pointerdown", (e) => { if (e.button === 0) startTalk(e); });
+  mic.addEventListener("pointerup", (e) => { if (e.button === 0) release(); });
   mic.addEventListener("pointercancel", stopTalk);
   mic.addEventListener("keydown", (e) => {
     if (e.key !== " " && e.key !== "Enter") return;
