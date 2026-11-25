@@ -26,6 +26,8 @@ before you commit, run them from its folder with this repository cloned beside i
   address, the issue forms, and the FCC notice before the Stick's pre-order. `node tools/site-check.mjs --online
   ../liquid-control` also asks GitHub whether each release a page links to exists.
 - `node --test Tests/site_tokens.test.mjs`: text stays readable on every background, in light and dark.
+- `node --test Tests/site_marks.test.mjs`: every page's footer has the App Store text's trademark and "not affiliated"
+  line word for word (the last paragraph of docs/APP-STORE.md's Description), so the two change together.
 - `node tools/site-render.mjs ../liquid-control`: every page fits a 360 px wide screen. It needs Microsoft Edge or
   Google Chrome, where the system keeps them or at `EDGE_PATH`.
 
