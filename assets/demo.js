@@ -12,7 +12,9 @@
   const mic = $(".demo-mic");
   const pointer = $(".pointer");
   const ripple = $(".ripple");
+  const notes = $(".mac-text");
   const term = $(".term-out");
+  const termWin = $(".mac-term");
   const play = $(".tv-play");
   const tiles = [...demo.querySelectorAll(".tv-tile")];
   const keys = [...demo.querySelectorAll(".demo-keys button")];
@@ -40,6 +42,15 @@
     pointer.style.top = py * 100 + "%";
     tiles.forEach((t, i) => t.classList.toggle("focus", i === focus));
     term.textContent = lines.join("\n");
+    // The windows don't grow. Notes and the TV's search field scroll to the newest words and the caret, as real ones
+    // do. The terminal lets its oldest lines go, never the agent's question and its keys, so a phone-width screen
+    // still shows them. The device not on screen measures nothing; it's fitted when it comes back.
+    notes.scrollTop = notes.scrollHeight;
+    typed.tv.scrollLeft = typed.tv.scrollWidth;
+    while (lines.length > 2 && term.getBoundingClientRect().bottom > termWin.getBoundingClientRect().bottom + 0.5) {
+      lines.shift();
+      term.textContent = lines.join("\n");
+    }
   }
 
   function ask() {
@@ -187,6 +198,12 @@
   mic.addEventListener("contextmenu", (e) => e.preventDefault());
 
   demo.querySelectorAll(".demo-bar button").forEach((b) => b.addEventListener("click", () => setMode(b.dataset.mode)));
+  // The screen scales with the window, so what fits in it changes too.
+  let frame = 0;
+  addEventListener("resize", () => {
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(show);
+  });
   keys.forEach((k, i) => { k.textContent = KEYS.mac[i]; });
   lines = ["$ agent"];
   ask();

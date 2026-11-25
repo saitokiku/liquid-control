@@ -476,7 +476,7 @@ main { display: block; }
   font: 600 clamp(9px, 1.6cqw, 13px)/1 var(--font);
 }
 .mac-win { position: absolute; border-radius: 1.4cqw; overflow: hidden; background: #FFF; box-shadow: 0 1.6cqw 4cqw rgba(0, 0, 0, .38); }
-.mac-notes { left: 5%; top: 13%; width: 56%; height: 64%; }
+.mac-notes { left: 5%; top: 13%; width: 56%; height: 64%; display: flex; flex-direction: column; }
 .mac-term { right: 4%; bottom: 6%; width: 47%; height: 44%; background: #1E1F24; }
 .mac-chrome {
   display: flex;
@@ -492,7 +492,11 @@ main { display: block; }
 .mac-chrome i:nth-child(2) { background: #FEBC2E; }
 .mac-chrome i:nth-child(3) { background: #28C840; margin-right: .6cqw; }
 .mac-term .mac-chrome { border-bottom-color: rgba(255, 255, 255, .08); color: #98989F; }
+/* The rest of the Notes window, which demo.js keeps scrolled to the newest line. */
 .mac-text {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
   margin: 0;
   padding: 1.8cqw 2.2cqw;
   color: #1C1C1E;
@@ -549,6 +553,8 @@ main { display: block; }
   font: 600 clamp(11px, 2.4cqw, 19px)/1 var(--font);
 }
 .tv-search svg { width: 2.6cqw; min-width: 12px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
+/* One line, as in a search field: demo.js scrolls it to the newest words. The taller line keeps descenders unclipped. */
+.tv-search .typed { min-width: 0; overflow: hidden; white-space: pre; line-height: 1.3; }
 .tv-row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 2.2cqw; }
 .tv-tile {
   display: flex;
