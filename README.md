@@ -14,4 +14,9 @@ private.
 The site is plain HTML and CSS with a few lines of JavaScript, served by GitHub Pages from `main` with no build step.
 It has no analytics and no cookies, and loads nothing from anywhere else.
 
+Browsers keep what GitHub Pages serves for up to 10 minutes, so the pages load `assets/site.css`, `site.js` and
+`demo.js` with `?v=` set to the first 8 hex digits of the file's SHA-256 (`sha256sum assets/site.css | cut -c1-8`).
+When you change one of them, change its `?v=` on every page that loads it, so a changed page doesn't arrive with the
+old file.
+
 © 2026 Manan Bhardwaj
