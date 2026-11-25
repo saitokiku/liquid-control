@@ -630,6 +630,22 @@ main { display: block; }
 .demo.listening .demo-mic { box-shadow: 0 0 0 6px rgba(79, 139, 255, .3); }
 .demo-pad:focus-visible, .demo-phone button:focus-visible, .demo-type input:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
 
+/* The screen and the trackpad have to fit in the window together, below the 70 px header (78 px with some air), or
+   the pointer moves out of sight while you drag. A phone held sideways puts them side by side, as a wide window does;
+   side by side, the screen is never taller than that room, and the trackpad gives up height before the phone's bar
+   does. Stacked, the trackpad gives up height first, down to 140 px: above it come the screen (as wide as the page),
+   the 28 px gap and the phone's 74 px down to the trackpad. svh is the window with the browser's bars showing. */
+@media (min-width: 560px) and (max-width: 959px) and (orientation: landscape) {
+  .demo { grid-template-columns: minmax(0, 1fr) min(300px, 42%); gap: 20px; }
+}
+@media (min-width: 960px), (min-width: 560px) and (orientation: landscape) {
+  .demo-screen { justify-self: center; width: min(100%, (100svh - 78px) * 1.6); }
+  .demo-pad { height: clamp(120px, 100svh - 160px, 210px); }
+}
+@media (max-width: 559px), (max-width: 959px) and (orientation: portrait) {
+  .demo-pad { height: clamp(140px, 100svh - 180px - (100vw - 32px) * .625, 210px); }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .caret { animation: demo-caret 1.1s steps(1) infinite; }
   .ripple.on { animation: demo-ripple .45s ease-out; }
