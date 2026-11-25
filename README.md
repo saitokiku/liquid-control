@@ -8,6 +8,7 @@ private.
 
 - Get it: https://saitokiku.github.io/liquid-control/get/
 - Support and questions: https://github.com/saitokiku/liquid-control/issues/new/choose (issues are public)
+- Security problems: report them privately, as https://github.com/saitokiku/liquid-control/security/policy says
 - Privacy policy: https://saitokiku.github.io/liquid-control/privacy/
 
 The site is plain HTML and CSS with a few lines of JavaScript, served by GitHub Pages from `main` with no build step.
