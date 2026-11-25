@@ -26,6 +26,7 @@
 
   let mode = "mac";
   const text = { mac: "", tv: "" };
+  const left = { mac: [], tv: [] };   // the words of each device's spoken line still to come (the mic, below)
   let px = 0.46, py = 0.42;   // the pointer, as fractions of the screen
   let focus = 1;              // the TV tile with the focus ring
   let task = 0, asking = false, nextTask = 0;
@@ -34,6 +35,13 @@
   const say = (t) => { live.textContent = t; };
   const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
   const capture = (el, e) => { try { el.setPointerCapture(e.pointerId); } catch { /* not an active pointer */ } };
+
+  // Typed text goes to the device it was typed on, and a spoken line cut short isn't picked up again after it.
+  function write(m, s) {
+    if (!s) return;
+    text[m] += s;
+    left[m] = [];
+  }
 
   function show() {
     typed.mac.textContent = text.mac + (mode === "mac" ? input.value : "");
@@ -72,7 +80,8 @@
 
   function setMode(m) {
     if (m === mode) return;
-    text[mode] += input.value;   // what was typed stays on the device it went to
+    stopTalk();                 // a spoken line stops at the switch, on the device it was going to
+    write(mode, input.value);   // as does what was typed
     input.value = "";
     mode = m;
     demo.dataset.mode = m;
@@ -159,33 +168,40 @@
   keys.forEach((k, i) => k.addEventListener("click", () => {
     if (mode === "mac") answer(i === 0);
     else if (i === 0) { play.classList.remove("on"); say("Back."); }
-    else { play.classList.remove("on"); focus = 0; text.tv = ""; input.value = ""; say("Home."); show(); }
+    else { play.classList.remove("on"); focus = 0; text.tv = ""; left.tv = []; input.value = ""; say("Home."); show(); }
   }));
 
   input.addEventListener("input", show);
   input.addEventListener("keydown", (e) => {
     if (e.key !== "Enter") return;
     e.preventDefault();
-    text[mode] += input.value + (mode === "mac" ? "\n" : "");
+    write(mode, input.value + (mode === "mac" ? "\n" : ""));
     input.value = "";
     say(mode === "mac" ? "Typed on the Mac." : "Searching on the TV.");
     show();
   });
 
-  // Hold to talk: the line arrives a word at a time while the mic is held, as live dictation does.
-  let words = [], talking = 0;
+  // Hold to talk: the line arrives a word at a time while the mic is held, as live dictation does, into the device it
+  // started on. Let go before its end and the next hold carries on from there. A tap too short to catch a word, or a
+  // click on its own (a screen reader or Voice Control presses with a click alone), says the rest of the line.
+  let talking = 0, into = mode, heard = 0, micUp = -Infinity;
   function startTalk(e) {
     if (talking) return;
     e.preventDefault();
-    if (e.pointerId !== undefined) capture(mic, e);
-    text[mode] += input.value;
+    if (e.type === "pointerdown") capture(mic, e);
+    into = mode;
+    write(into, input.value);
     input.value = "";
-    words = SPOKEN[mode].split(" ");
-    if (text[mode] && !/\s$/.test(text[mode])) text[mode] += " ";
+    if (!left[into].length) {
+      left[into] = SPOKEN[into].split(" ");
+      if (text[into] && !/\s$/.test(text[into])) text[into] += " ";
+    }
+    heard = 0;
     demo.classList.add("listening");
     talking = setInterval(() => {
-      if (!words.length) return stopTalk();
-      text[mode] += words.shift() + (words.length ? " " : "");
+      if (!left[into].length) return stopTalk();
+      text[into] += left[into].shift() + (left[into].length ? " " : "");
+      heard++;
       show();
     }, 170);
   }
@@ -194,13 +210,24 @@
     clearInterval(talking);
     talking = 0;
     demo.classList.remove("listening");
-    say(mode === "mac" ? "Dictated into Notes on the Mac." : "Dictated into the TV's search.");
+    if (heard) say(into === "mac" ? "Dictated into Notes on the Mac." : "Dictated into the TV's search.");
+  }
+  // Letting go ends a hold where it is; a tap that caught no word lets the line run to its end.
+  function release() {
+    micUp = performance.now();
+    if (heard) stopTalk();
   }
   mic.addEventListener("pointerdown", startTalk);
-  mic.addEventListener("pointerup", stopTalk);
+  mic.addEventListener("pointerup", release);
   mic.addEventListener("pointercancel", stopTalk);
-  mic.addEventListener("keydown", (e) => { if ((e.key === " " || e.key === "Enter") && !e.repeat) startTalk(e); });
-  mic.addEventListener("keyup", (e) => { if (e.key === " " || e.key === "Enter") stopTalk(); });
+  mic.addEventListener("keydown", (e) => {
+    if (e.key !== " " && e.key !== "Enter") return;
+    e.preventDefault();   // the key is the hold, so it makes no click, nor one for each repeat
+    if (!e.repeat) startTalk(e);
+  });
+  mic.addEventListener("keyup", (e) => { if (e.key === " " || e.key === "Enter") release(); });
+  // The click that ends a press comes moments after it; only a click on its own starts the line.
+  mic.addEventListener("click", (e) => { if (performance.now() - micUp > 500) startTalk(e); });
   mic.addEventListener("contextmenu", (e) => e.preventDefault());
 
   demo.querySelectorAll(".demo-bar button").forEach((b) => b.addEventListener("click", () => setMode(b.dataset.mode)));
