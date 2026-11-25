@@ -57,3 +57,17 @@
     button.focus();
   });
 })();
+
+// The Stick's renders on the home page cycle only once this script starts them, with a button that pauses them
+// (site.css). Without it, the Connected screen shows, still, and the button stays hidden.
+(() => {
+  const renders = document.querySelector(".stick-renders");
+  const button = document.querySelector(".stick-pause");
+  if (!renders || !button) return;
+  renders.classList.add("cycling");
+  button.addEventListener("click", () => {
+    const paused = renders.classList.toggle("paused");
+    button.textContent = paused ? "Play" : "Pause";
+  });
+  button.hidden = false;
+})();

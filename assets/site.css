@@ -713,9 +713,10 @@ main { display: block; }
   border-radius: var(--radius-surface);
   padding: clamp(24px, 4vw, 48px);
 }
-/* The Stick: four renders of the same shot, one per screen, faded in turn (16 s round). Only the screen changes, so
-   the cross-fade reads as the screen updating. Reduced motion shows the Connected one, still. */
-.stick-art { margin: 0; }
+/* The Stick: four renders of the same shot, one per screen. While site.js has them cycling they fade in turn (16 s
+   round), and only the screen changes, so the cross-fade reads as the screen updating; its Pause button stops them
+   where they are (WCAG 2.2.2). Without the script, or with Reduce Motion, the Connected one shows, still. */
+.stick-art { position: relative; margin: 0; }
 .stick-renders { position: relative; aspect-ratio: 1400 / 870; }
 .stick-renders img {
   position: absolute;
@@ -723,19 +724,34 @@ main { display: block; }
   width: 100%;
   height: 100%;
   opacity: 0;
-  animation: stick-screens 16s infinite both;
 }
-.stick-renders img:nth-child(2) { animation-delay: 4s; }
-.stick-renders img:nth-child(3) { animation-delay: 8s; }
-.stick-renders img:nth-child(4) { animation-delay: 12s; }
+.stick-renders img:nth-child(3) { opacity: 1; }
+.stick-renders.cycling img { animation: stick-screens 16s infinite both; }
+.stick-renders.cycling img:nth-child(2) { animation-delay: 4s; }
+.stick-renders.cycling img:nth-child(3) { animation-delay: 8s; }
+.stick-renders.cycling img:nth-child(4) { animation-delay: 12s; }
+.stick-renders.paused img { animation-play-state: paused; }
 @keyframes stick-screens {
   0% { opacity: 0; }
   3%, 25% { opacity: 1; }
   28%, 100% { opacity: 0; }
 }
+.stick-pause {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--edge);
+  border-radius: 999px;
+  background: var(--glass-solid);
+  color: var(--text);
+  font: 600 15px/1 var(--font);
+  cursor: pointer;
+}
 @media (prefers-reduced-motion: reduce) {
-  .stick-renders img { animation: none; }
-  .stick-renders img:nth-child(3) { opacity: 1; }
+  .stick-renders.cycling img { animation: none; }
+  .stick-pause { display: none; }
 }
 .stick-art figcaption { margin-top: 4px; color: var(--text-2); font-size: 13px; text-align: center; }
 .stick h2 { font-size: clamp(28px, 1.6vw + 22px, 40px); font-weight: 700; }
