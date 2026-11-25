@@ -88,9 +88,11 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
+/* The sticky header is 70 px tall: whatever the page scrolls to, a #link or a control taking focus, lands below it. */
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  scroll-padding-top: 88px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -312,10 +314,7 @@ code { font-family: var(--mono); font-size: .9em; }
 
 main { display: block; }
 
-.section {
-  padding-top: clamp(72px, 9vw, 128px);
-  scroll-margin-top: 72px;
-}
+.section { padding-top: clamp(72px, 9vw, 128px); }
 
 .section-head { max-width: 760px; margin-bottom: clamp(28px, 4vw, 48px); }
 .section-head h2 { font-size: clamp(28px, 1.6vw + 22px, 40px); font-weight: 700; }
@@ -702,7 +701,6 @@ p.fcc { margin-top: 16px; max-width: 46em; padding: 10px 14px; border-left: 3px 
 
 /* Get it: one card per platform. */
 .get-list { display: grid; gap: 16px; }
-.get-item { scroll-margin-top: 88px; }
 .get-item h2 { font-size: clamp(26px, 1.2vw + 20px, 34px); font-weight: 700; }
 .get-body > p:not(.fine):not(.sha):not(.fcc) { margin-top: 12px; max-width: 46em; color: var(--text-2); }
 .get-body > p:first-child { margin-top: 14px; }
@@ -722,16 +720,15 @@ p.fcc { margin-top: 16px; max-width: 46em; padding: 10px 14px; border-left: 3px 
 
 /* Support: the questions as cards, then Report a problem. */
 .faq { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); }
-.faq .card { scroll-margin-top: 88px; }
 .faq .card h3 { font-size: 19px; }
 .subhead { margin-bottom: 20px; font-size: clamp(26px, 1.2vw + 20px, 34px); font-weight: 700; }
-.report { margin-top: clamp(56px, 7vw, 96px); scroll-margin-top: 88px; }
+.report { margin-top: clamp(56px, 7vw, 96px); }
 .report .card p { max-width: 46em; }
 .report .actions { margin-top: 24px; }
 
 /* Privacy: the policy as plain reading text. */
 .prose { max-width: 760px; }
-.prose h2 { margin-top: 52px; font-size: clamp(24px, .8vw + 20px, 30px); font-weight: 700; scroll-margin-top: 88px; }
+.prose h2 { margin-top: 52px; font-size: clamp(24px, .8vw + 20px, 30px); font-weight: 700; }
 .prose p, .prose ul, .prose .table-wrap { margin-top: 14px; }
 .prose ul { padding-left: 1.3em; }
 .prose li + li, .prose li > ul { margin-top: 8px; }
