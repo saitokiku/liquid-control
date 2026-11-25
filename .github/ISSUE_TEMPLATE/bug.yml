@@ -21,6 +21,7 @@ body:
       options:
         - iPhone
         - Apple Watch
+        - Android phone
     validations:
       required: true
   - type: input
