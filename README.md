@@ -19,4 +19,14 @@ Browsers keep what GitHub Pages serves for up to 10 minutes, so the pages load `
 When you change one of them, change its `?v=` on every page that loads it, so a changed page doesn't arrive with the
 old file.
 
+Nothing checks a push here: GitHub Pages publishes `main` as it is. The site's checks are in the apps' repository, so
+before you commit, run them from its folder with this repository cloned beside it:
+
+- `node tools/site-check.mjs ../liquid-control`: links and their anchors, alt text, what loads from where, no email
+  address, the issue forms, and the FCC notice before the Stick's pre-order. `node tools/site-check.mjs --online
+  ../liquid-control` also asks GitHub whether each release a page links to exists.
+- `node --test Tests/site_tokens.test.mjs`: text stays readable on every background, in light and dark.
+- `node tools/site-render.mjs ../liquid-control`: every page fits a 360 px wide screen. It needs Microsoft Edge or
+  Google Chrome, where the system keeps them or at `EDGE_PATH`.
+
 © 2026 Manan Bhardwaj
