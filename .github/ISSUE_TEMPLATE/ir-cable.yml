@@ -1,0 +1,25 @@
+name: Get notified about the IR cable
+description: Hear when the IR cable goes on sale, the 3.5 mm infrared plug that lets your phone work a TV like a remote.
+title: "IR cable: notify me"
+labels: ["ir-cable"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Issues are public. Don't include passwords, emails or anything personal.**
+        The IR cable isn't on sale yet, and [Get it](https://saitokiku.github.io/liquid-control/get/#ir-cable) has the details. This form doesn't order one. Submit it and GitHub will notify you when this issue gets the news. Your GitHub name is public here, and we ask for no email.
+  - type: dropdown
+    id: phone
+    attributes:
+      label: What would you plug it into? (optional)
+      options:
+        - iPhone with USB-C
+        - iPhone with Lightning
+        - Android phone
+        - The Stick with IR
+        - Something else
+  - type: input
+    id: tv
+    attributes:
+      label: Which TV or box would it work? (optional)
+      placeholder: "e.g. Samsung TV, Sony soundbar"
